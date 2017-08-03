@@ -1,0 +1,26 @@
+/*{
+	margin: 0;
+	padding: 0;
+}*/	
+
+.imagemIndex{
+	height:100%;
+	/*width:100%;*/
+	/*position: fixed;*/
+	/* Altura mínima para IE */
+	background-color: #f6f6f6;
+	/*background-image: url(../img/cab4.jpg);*/
+	/*background-attachment: fixed;*/
+	/*background-repeat: no-repeat;*/
+	/*-moz-background-size: 100% 100%;*/
+	/*-webkit-background-size: 100% 100%;*/
+}
+
+.rodape{
+	bottom: 0px;
+	left: 0px;
+	position: relative;
+	display: inline-block;
+	text-align: center;
+	left: 50%;
+}
