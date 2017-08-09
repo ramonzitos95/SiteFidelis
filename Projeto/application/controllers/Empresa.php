@@ -9,9 +9,12 @@ class Empresa extends CI_Controller
         parent::__construct();
 
         $this->load->helper(array('form'));
-        $this->load->model('Auditoria_model');
-        $this->load->library('form_validation');
+
+        $this->load->library(array('form_validation', 'Imagem'));
+        $this->obj_Imagem = new Imagem();
+
         $this->load->model('Empresa_Model');
+        $this->obj_Empresa_Model = new Empresa_Model();
     }
 
     public function index()
@@ -27,11 +30,6 @@ class Empresa extends CI_Controller
 
     public function cadastrarEmpresa()
     {
-        $this->load->model('Empresa_Model');
-
-        //$this->load->library('form_validation');
-
-        $empresaid = 0;
         $razaosocial = $this->input->post('razaosocial');
         $cnpj = ($this->input->post('cnpj'));
         $cep = $this->input->post('cep');
@@ -42,6 +40,10 @@ class Empresa extends CI_Controller
         $estado = $this->input->post('estado');
         $datacadastro = $this->input->post('datacadastro');
         $situacao = $this->input->post('situacao');
+        $foto = $_FILES['foto'];
+        var_dump($foto);
+        $caminhoFoto = $this->obj_Imagem->verificaImagem($foto);
+        echo $caminhoFoto;
 
         if($situacao == "ativo"){
             $situacao = true;
@@ -49,10 +51,8 @@ class Empresa extends CI_Controller
             $situacao = false;
         }
 
-        $empresaid = $this->Empresa_Model->Serializa();
-
         $dadosCurso = array(
-            'empresaid' => $empresaid,
+            //'empresaid' => $empresaid,
             'razaosocial' => $razaosocial,
             'cnpj' => $cnpj,
             'cep' => $cep,
@@ -62,29 +62,26 @@ class Empresa extends CI_Controller
             'cidade' => $cidade,
             'estado' => $estado,
             'datacadastro' => $datacadastro,
-            'situacao' => $situacao
+            'situacao' => $situacao,
+            'foto' => $caminhoFoto
         );
 
-        $cadastrado = $this->Empresa_Model->CadastrarEmpresa($dadosCurso);
+        $cadastrado = $this->obj_Empresa_Model->CadastrarEmpresa($dadosCurso);
 
 
-        if ($this->form_validation->run() == FALSE)
-        {
-            $this->load->view('menu');
-        }
-        else
-        {
-            If($cadastrado){
-                redirect('Grade');
-            }else{
-                $this->load->view('Error_view');
-            }
-        }
-
-
+//        if ($this->form_validation->run() == FALSE)
+//        {
+//            $this->load->view('menu');
+//        }
+//        else
+//        {
+//            If($cadastrado){
+//                redirect('Grade');
+//            }else{
+//                $this->load->view('Error_view');
+//            }
+//        }
     }
-
-
 
     public function Consultar()
     {

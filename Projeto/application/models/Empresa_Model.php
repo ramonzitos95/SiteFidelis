@@ -42,7 +42,7 @@ class Empresa_Model extends CI_Model
 
     }
 
-    public function DeletarGrade($id)
+    public function DeletarEmpresa($id)
     {
         If ($id != null){
             $this->db->were('empresaid', $id);

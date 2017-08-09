@@ -9,7 +9,11 @@ $this->load->view('login/menu_view');
         <div id="erros" style="display: none;" class="alert alert-danger">
 
         </div>
-        <form action="<?php echo base_url('Empresa/cadastrarEmpresa'); ?>" id="form" method="post">
+
+        <form action="<?php echo base_url('Empresa/cadastrarEmpresa'); ?>" id="form" method="post" enctype="multipart/form-data">
+            <b><label>Logo da Empresa</label></b><br>
+            Selecione uma imagem: <input type="file" name="foto"/><br /><br />
+
             <div class="form-group col-md-12">
                 <label>Razão Social</label><br>
                 <input type="text" name="razaosocial" id="razaosocial" class="form-control" required>
