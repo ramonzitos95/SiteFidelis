@@ -1,0 +1,58 @@
+CREATE TABLE empresa
+(
+	empresaid Serial PRIMARY KEY ,
+	razaosocial char(100),
+	cnpj char(20),
+	cep char(10),
+	site char(100),
+	telefone char(20),
+	endereco char(100),
+	cidade char(30),
+	estado char(25),
+	situacao smallint,
+	foto character varying(100),
+	datacadastro date
+);
+
+
+CREATE TABLE usuario
+(
+	usuarioid Serial PRIMARY KEY,
+	email char(100),
+	senha text
+);
+
+CREATE TABLE promocoes
+(
+	promocaoid Serial PRIMARY KEY,
+	descricaopromocao char(100),
+	datavalidade date,
+	situacao smallint,
+	foto bit varying
+);
+
+CREATE TABLE cliente
+(
+	clienteid Serial PRIMARY KEY,
+	nome char(90),
+	cep char(10),
+	cpf char(20)
+);
+
+CREATE TABLE empresa_cliente
+(
+	empresaid integer PRIMARY KEY,
+	cnpj char(20),
+	clienteid integer,
+	cpf char(20)
+);
+
+
+CREATE TABLE empresa_promocao
+(
+	empresaid integer PRIMARY KEY,
+	promocaoid integer,
+	razaosocial char(100),
+	descricaopromocao char(100)
+);
+
