@@ -1,15 +1,17 @@
 <?php
-$this->load->view('uteis/cabecalho');
-$this->load->view('login/menu_unico');
+
+$this->load->view('login/menu_view');
 ?>
 
     <div class="container-fluid">
-        <h3>Buscar Cursos:</h3>
-        <div class="form-inline form-group" action="<?php echo base_url('Curso/ConsultaFiltro'); ?>">
+        <h3>Buscar Empresas:</h3>
+        <div class="form-inline form-group" action="<?php echo base_url('Empresa/ConsultaFiltro'); ?>">
             <form id="form">
                 <label>Buscar por: </label>
                 <select id="atributo" class="form-control" name="operacao" required>
-                    <option value="nome">Nome</option>
+                    <option value="nome">Razão Social</option>
+                    <option value="endereco">Endereço</option>
+                    <option value="cidade">Cidade</option>
                 </select>
                 <input id="valorEve" type="text" class="form-control" name="dado"/>
                 <button type="submit" class="btn btn-primary">Consultar</button>
@@ -24,36 +26,32 @@ $this->load->view('login/menu_unico');
                 <table class="table table-hover table-striped">
                     <thead>
                     <tr class="cabecalho">
-                        <th colspan="1">Empresa</th>
-                        <th colspan="1">Carga Horaria</th>
-                        <th colspan="1">Modo do Cuso</th>
-                        <th colspan="1">Origem</th>
-                        <th colspan="1">Situaçao</th>
+                        <th colspan="2">Razão Social</th>
+                        <th colspan="1">CNPJ</th>
+                        <th colspan="1">CEP</th>
+                        <th colspan="1">Telefone</th>
+                        <th colspan="1">Cidade</th>
+                        <th colspan="1">Estado</th>
                         <th colspan="1"></th>
                         <th colspan="1"></th>
                     </tr>
                     </thead>
                     <tbody id="conteudo">
-                    <?php foreach ($empresas as $empresa) {
-                        If ($empresa->situacao == true) {
-                            $txtSituacao = "Ativo";
-                        } else {
-                            $txtSituacao = "Inativo";
-                        }
-                        ?>
+                        <?php foreach ($empresas as $empresa) { ?>
                         <tr>
-                            <td colspan="1"><?php echo $curso->cursonome; ?></td>
-                            <td colspan="1"><?php echo $curso->cargahoraria; ?></td>
-                            <td colspan="1"><?php echo $curso->modocurso; ?></td>
-                            <td colspan="1"><?php echo $curso->origemcurso; ?></td>
-                            <td colspan="1"><?php echo $txtSituacao ?></td>
+                            <td colspan="2"><?php echo $empresa->razaosocial; ?></td>
+                            <td colspan="1"><?php echo $empresa->cnpj; ?></td>
+                            <td colspan="1"><?php echo $empresa->cep; ?></td>
+                            <td colspan="1"><?php echo $empresa->telefone; ?></td>
+                            <td colspan="1"><?php echo $empresa->cidade; ?></td>
+                            <td colspan="1"><?php echo $empresa->estado; ?></td>
                             <td colspan="1">
-                                <a href="<?php echo base_url('Curso/Alteracao/' . $curso->cursoid); ?>"
-                                   class="btn btn-large btn-primary">Editar Curso</a>
+                                <a href="<?php echo base_url('Empresa/Alteracao/' . $empresa->empresaid); ?>"
+                                   class="btn btn-large btn-primary">Editar Empresa</a>
                             </td>
                             <td colspan="1">
-                                <a href="<?php echo base_url('Curso/DeletarCurso/' . $curso->cursoid); ?>"
-                                   class="btn btn-large btn-primary">Excluir Curso</a>
+                                <a href="<?php echo base_url('Empresa/DeletarEmpresa/' . $empresa->empresaid); ?>"
+                                   class="btn btn-large btn-primary">Excluir Empresa</a>
                             </td>
                         </tr>
                     <?php } ?>
@@ -71,7 +69,7 @@ $this->load->view('login/menu_unico');
             function (e) {
                 e.preventDefault();
                 $.ajax({
-                    url: "/CodeigniterBase/Projeto/Curso/ConsultaFiltro",
+                    url: "/SiteFidelis/SiteFidelis/Projeto/Empresa/ConsultaFiltro",
                     type: "post",
                     data: $(this).serialize(),
                     beforeSend: function () {

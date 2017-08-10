@@ -30,23 +30,33 @@ class Empresa extends CI_Controller
 
     public function cadastrarEmpresa()
     {
-        $config['upload_path']          = base_url('/assets/img');
-        $config['allowed_types']        = 'gif|jpg|png';
-        $config['max_size']             = 100;
-        $config['max_width']            = 1024;
-        $config['max_height']           = 768;    
+        // definimos um nome aleatório para o diretório
+        // definimos o path onde o arquivo será gravado
+        $foto = $_FILES['foto'];
+        $path = "./assets/img/empresa";
+        $nomeFoto = "minhaimagem.jpg";
+        if(!file_exists($path))
+            mkdir($path, 0755);
 
-        $this->load->library('upload', $config);
+        $configUpload['upload_path']          = $path;
+        $configUpload['file_name']            = $nomeFoto;
+        $configUpload['allowed_types']        = 'gif|jpg|png';
+        $configUpload['max_size']             = 100;
+        $configUpload['max_width']            = 1024;
+        $configUpload['max_height']           = 768;
 
-        if ( ! $this->upload->do_upload('userfile'))
+        // passamos as configurações para a library upload
+        $this->load->library('upload');
+        $this->upload->initialize($configUpload);
+
+        if ( ! $this->upload->do_upload('foto')) //se o upload foi processado
         {
             $error = array('error' => $this->upload->display_errors());
-            //$this->load->view('upload_form', $error);
+            print_r($error);
         }
         else
         {
             $data = array('upload_data' => $this->upload->data());
-            //$this->load->view('upload_success', $data);
         }
 
         $razaosocial = $this->input->post('razaosocial');
@@ -59,8 +69,7 @@ class Empresa extends CI_Controller
         $estado = $this->input->post('estado');
         $datacadastro = $this->input->post('datacadastro');
         $situacao = $this->input->post('situacao');
-        $foto = $_FILES['foto'];
-        $caminhoFoto = $config['upload_path'] 
+        $caminhoFoto = $configUpload['upload_path'];
         echo $caminhoFoto;
 
         if($situacao == "ativo"){
@@ -86,24 +95,22 @@ class Empresa extends CI_Controller
 
         $cadastrado = $this->obj_Empresa_Model->CadastrarEmpresa($dadosCurso);
 
-
-//        if ($this->form_validation->run() == FALSE)
-//        {
-//            $this->load->view('menu');
-//        }
-//        else
-//        {
-//            If($cadastrado){
-//                redirect('Grade');
-//            }else{
-//                $this->load->view('Error_view');
-//            }
-//        }
+        if ($this->form_validation->run() == FALSE)
+        {
+            $this->load->view('menu');
+        }
+        else
+        {
+            If($cadastrado){
+                redirect('Grade');
+            }else{
+                $this->load->view('Error_view');
+            }
+        }
     }
 
     public function Consultar()
     {
-        $this->load->model('Curso_model');
         $dados['empresas'] = $this->obj_Empresa_Model->listaEmpresas();
         $this->load->view('Empresa/ConsultaEmpresa_view', $dados);
     }
@@ -113,33 +120,27 @@ class Empresa extends CI_Controller
         $operacao = $this->input->post('operacao');
         $dado = $this->input->post('dado');
 
-//        var_dump($this->input->post);
         $dadosFiltro = array(
             'operacao' => $operacao,
             'dado' => $dado
         );
         $this->load->model('Curso_model');
-        $dados['empresas'] = $this->obj_Empresa_Model->listaCursoFiltro($dadosFiltro);
+        $dados['empresas'] = $this->obj_Empresa_Model->listaEmpresaFiltro($dadosFiltro);
 
         $this->load->view('Empresa/ConsultaEmpresaFiltro_view', $dados);
     }
 
-    public function DeletarCurso($id)
+
+    public function DeletarEmpresa($id)
     {
-        $this->load->model('Curso_model');
-        $deletado = $this->Curso_model->DeletarCurso($id);
+        $deletado = $this->obj_Empresa_Model->DeletarEmpresa($id);
         $dados = array(
             'id' => $id
         );
         if($deletado == false){
             echo base_url('Menu');
         } else {
-            //Gravando log
-            $nome = $this->Curso_model->RetornaNomeCurso($deletado);
-            $texto = "O curso " .  $nome->cursonome . " foi deletado";
-            echo $this->Auditoria->gravandoLog($texto);
-            echo '<script>alert("Curso excluido com sucesso")</script>';
-            redirect('Menu');
+            redirect('Empresa/Consultar');
         }
     }
 
@@ -177,6 +178,13 @@ class Empresa extends CI_Controller
             echo '<script>alert("O curso foi atualizado com sucesso");</script>';
             redirect('Menu');
         }
+    }
+
+    public function consultaEmpresaWS() {
+        $dados['empresas'] = $this->obj_Empresa_Model->listaEmpresasArray();
+        $json = json_encode($dados);
+
+        echo $json;
     }
 
 }

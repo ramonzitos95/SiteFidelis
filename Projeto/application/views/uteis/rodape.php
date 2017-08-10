@@ -19,5 +19,6 @@
     <div class="rodape row-fluid">
 	    <a href="view/desenvolvedores.html" target="blank" class="desenvolv">Desenvolvedores</a>
     </div>
+    <script src="<?php echo base_url("assets/js/empresa.js"); ?>"></script>
 </html>
 

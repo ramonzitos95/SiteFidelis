@@ -1,19 +1,32 @@
 <?php
 $this->load->view('login/menu_view');
 ?>
+    <script type="text/javascript">
+        function PreviewImage() {
+            var oFReader = new FileReader();
+            oFReader.readAsDataURL(document.getElementById("uploadImage").files[0]);
 
+            oFReader.onload = function (oFREvent) {
+                document.getElementById("uploadPreview").src = oFREvent.target.result;
+            };
+        };
+    </script>
     <div class="container-fluid" >
     <div class="row-fluid">
         <?php echo validation_errors(); ?>
-        <h2 id="topo">Cadastro de Empresa</h2>
+        <h2 align="center" id="topo">Cadastro de Empresa</h2>
         <div id="erros" style="display: none;" class="alert alert-danger">
 
         </div>
 
         <form action="<?php echo base_url('Empresa/cadastrarEmpresa'); ?>" id="form" method="post" enctype="multipart/form-data">
-            <b><label>Logo da Empresa</label></b><br>
-            Selecione uma imagem: <input type="file" name="foto"/><br /><br />
-
+            <div class="form-group col-md-3">
+                <b><label>Logo da Empresa</label></b><br>
+                Selecione uma imagem: <input type="file" id="uploadImage" name="foto"  onchange="PreviewImage();"/><br /><br />
+            </div>
+            <div class="form-group col-md-2">
+                <img id="uploadPreview" style="width: 100px; height: 75px; border-style: solid; border-width: 1px;" />
+            </div>
             <div class="form-group col-md-12">
                 <label>Razão Social</label><br>
                 <input type="text" name="razaosocial" id="razaosocial" class="form-control" required>
@@ -58,3 +71,5 @@ $this->load->view('login/menu_view');
     </div>
 </div>
 <?php $this->load->view('uteis/rodape'); ?>
+
+

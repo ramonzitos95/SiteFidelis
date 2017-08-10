@@ -40,4 +40,5 @@ class Curl
         curl_close($ch);
 
     }
+
 }
