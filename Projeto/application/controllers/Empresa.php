@@ -30,6 +30,25 @@ class Empresa extends CI_Controller
 
     public function cadastrarEmpresa()
     {
+        $config['upload_path']          = base_url('/assets/img');
+        $config['allowed_types']        = 'gif|jpg|png';
+        $config['max_size']             = 100;
+        $config['max_width']            = 1024;
+        $config['max_height']           = 768;    
+
+        $this->load->library('upload', $config);
+
+        if ( ! $this->upload->do_upload('userfile'))
+        {
+            $error = array('error' => $this->upload->display_errors());
+            //$this->load->view('upload_form', $error);
+        }
+        else
+        {
+            $data = array('upload_data' => $this->upload->data());
+            //$this->load->view('upload_success', $data);
+        }
+
         $razaosocial = $this->input->post('razaosocial');
         $cnpj = ($this->input->post('cnpj'));
         $cep = $this->input->post('cep');
@@ -41,8 +60,7 @@ class Empresa extends CI_Controller
         $datacadastro = $this->input->post('datacadastro');
         $situacao = $this->input->post('situacao');
         $foto = $_FILES['foto'];
-        var_dump($foto);
-        $caminhoFoto = $this->obj_Imagem->verificaImagem($foto);
+        $caminhoFoto = $config['upload_path'] 
         echo $caminhoFoto;
 
         if($situacao == "ativo"){
@@ -86,8 +104,8 @@ class Empresa extends CI_Controller
     public function Consultar()
     {
         $this->load->model('Curso_model');
-        $dados['cursos'] = $this->Curso_model->listaCursos();
-        $this->load->view('Curso/consultaCurso_view', $dados);
+        $dados['empresas'] = $this->obj_Empresa_Model->listaEmpresas();
+        $this->load->view('Empresa/ConsultaEmpresa_view', $dados);
     }
 
     public function ConsultaFiltro()
@@ -101,9 +119,9 @@ class Empresa extends CI_Controller
             'dado' => $dado
         );
         $this->load->model('Curso_model');
-        $dados['cursos'] = $this->Curso_model->listaCursoFiltro($dadosFiltro);
+        $dados['empresas'] = $this->obj_Empresa_Model->listaCursoFiltro($dadosFiltro);
 
-        $this->load->view('Curso/ConsultaCursoFiltro_view', $dados);
+        $this->load->view('Empresa/ConsultaEmpresaFiltro_view', $dados);
     }
 
     public function DeletarCurso($id)
