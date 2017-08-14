@@ -1,6 +1,8 @@
 <div class="container-fluid">
     <div class="row-fluid">
-        <?php echo validation_errors(); ?>
+        <?php if ($mensagem = get_mensagem_sessao()) { ?>
+        <div class="row"><div class="alert alert-info" role="alert"><?= $mensagem ?></div></div>
+        <?php } ?>
         <form action="<?php echo base_url('Login/Logar');?>" method="post" enctype="multipart/form-data">
         <h2 class="text-info">Digite seu usuário e senha para acesso ao sistema</h2>
         <div class="form-group">

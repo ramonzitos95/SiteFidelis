@@ -11,7 +11,8 @@ CREATE TABLE empresa
 	estado char(25),
 	situacao smallint,
 	foto character varying(100),
-	datacadastro date
+	datacadastro date,
+	usuario integer default 0
 );
 
 
@@ -28,7 +29,8 @@ CREATE TABLE promocoes
 	descricaopromocao char(100),
 	datavalidade date,
 	situacao smallint,
-	foto bit varying
+	foto bit varying,
+	empresa integer default 0
 );
 
 CREATE TABLE cliente
@@ -56,3 +58,16 @@ CREATE TABLE empresa_promocao
 	descricaopromocao char(100)
 );
 
+CREATE TABLE IF NOT EXISTS  ci_sessions (
+    sequencial_id Serial NOT NULL,
+    sessao_id varchar(40) ,
+    endereco_ip varchar(16) DEFAULT '0',
+    user_agent varchar(50) ,
+    ultima_atividade integer DEFAULT 0,
+    usuario_id integer,
+    email varchar(100),
+    senha text,
+   	empresa_id integer,
+    empresa_nome varchar(100),
+    PRIMARY KEY (sequencial_id)
+);

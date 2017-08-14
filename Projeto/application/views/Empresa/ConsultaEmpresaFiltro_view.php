@@ -1,18 +1,18 @@
 
-<?php foreach ($empresas as $empresa) { ?>
+<?php foreach ($empresas as $e) { ?>
     <tr>
-        <td colspan="2"><?php echo $empresa->razaosocial; ?></td>
-        <td colspan="1"><?php echo $empresa->cnpj; ?></td>
-        <td colspan="1"><?php echo $empresa->cep; ?></td>
-        <td colspan="1"><?php echo $empresa->telefone; ?></td>
-        <td colspan="1"><?php echo $empresa->cidade; ?></td>
-        <td colspan="1"><?php echo $empresa->estado; ?></td>
+        <td colspan="2"><?php echo $e->razaosocial; ?></td>
+        <td colspan="1"><?php echo $e->cnpj; ?></td>
+        <td colspan="1"><?php echo $e->cep; ?></td>
+        <td colspan="1"><?php echo $e->telefone; ?></td>
+        <td colspan="1"><?php echo $e->cidade; ?></td>
+        <td colspan="1"><?php echo $e->estado; ?></td>
         <td colspan="1">
-            <a href="<?php echo base_url('Empresa/Alteracao/' . $empresa->empresaid); ?>"
+            <a href="<?php echo base_url('Empresa/Alteracao/' . $e->empresaid); ?>"
                class="btn btn-large btn-primary">Editar Empresa</a>
         </td>
         <td colspan="1">
-            <a href="<?php echo base_url('Empresa/DeletarEmpresa/' . $empresa->empresaid); ?>"
+            <a href="<?php echo base_url('Empresa/DeletarEmpresa/' . $e->empresaid); ?>"
                class="btn btn-large btn-primary">Excluir Empresa</a>
         </td>
     </tr>

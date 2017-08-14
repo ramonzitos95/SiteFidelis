@@ -9,17 +9,22 @@ class Empresa extends CI_Controller
         parent::__construct();
 
         $this->load->helper(array('form'));
-
         $this->load->library(array('form_validation', 'Imagem'));
         $this->obj_Imagem = new Imagem();
 
-        $this->load->model('Empresa_Model');
+        $this->load->model(array('Empresa_Model', 'Session_model'));
+        $this->obj_sessao = new Session_model();
         $this->obj_Empresa_Model = new Empresa_Model();
     }
 
     public function index()
     {
-        $this->load->view('Empresa/cadastroEmpresa_view');
+        $dados_sessao = $this->obj_sessao->listaSessao(1);
+        $dados['title'] = 'Menu';
+        $dados['email'] =  $dados_sessao['email'];
+        $dados['empresa'] =  $dados_sessao['empresa'];
+        print_r($dados);
+        $this->load->view('Empresa/cadastroEmpresa_view', $dados);
     }
 
     public function Alteracao($cursoid)
@@ -70,12 +75,13 @@ class Empresa extends CI_Controller
         $datacadastro = $this->input->post('datacadastro');
         $situacao = $this->input->post('situacao');
         $caminhoFoto = $configUpload['upload_path'];
-        echo $caminhoFoto;
+        $usuariologado = $this->session->userdata('usuario_id');
+        //echo $caminhoFoto;
 
         if($situacao == "ativo"){
-            $situacao = true;
+            $situacao = 1;
         }elseif ($situacao == "inativo"){
-            $situacao = false;
+            $situacao = 0;
         }
 
         $dadosCurso = array(
@@ -90,7 +96,8 @@ class Empresa extends CI_Controller
             'estado' => $estado,
             'datacadastro' => $datacadastro,
             'situacao' => $situacao,
-            'foto' => $caminhoFoto
+            'foto' => $caminhoFoto,
+            'usuario' => $usuariologado
         );
 
         $cadastrado = $this->obj_Empresa_Model->CadastrarEmpresa($dadosCurso);

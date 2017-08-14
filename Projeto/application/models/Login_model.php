@@ -23,13 +23,12 @@ class Login_model extends CI_Model
     //Validando o login do aluno
     public function logarSistema($usuario, $senha)
     {
-        if (is_null($usuario) OR is_null($senha))
-            return false;
 
-        $this->db->where("email", $usuario);
-        $this->db->where("senha", $senha);
-        $logado = $this->db->get("usuario")->row_array();
-        return $logado;
+        $query = $this->db->get_where('usuario', array('email' => $usuario, 'senha' => $senha))->result();
+        if(isset($query))
+            return $query;
+        else
+            return false;
     }
 
     public function GetAluno($id)
@@ -61,5 +60,20 @@ class Login_model extends CI_Model
         } else {
             return false;
         }
+    }
+
+    public function BuscaEmpresaUsuario($usuario)
+    {
+        //Busca empresa ao qual usuário definiu no cadastro
+        $this->db->select('usuario');
+        $this->db->from('empresa');
+        $this->db->where('usuario', $usuario);
+        $result = $this->db->get()->result();
+        if($result != null){
+            return $result;
+        }else{
+            return false;
+        }
+
     }
 }

@@ -1,5 +1,5 @@
 <?php
-$this->load->view('login/menu_view');
+    $this->load->view('login/menu_view');
 ?>
     <script type="text/javascript">
         function PreviewImage() {
@@ -13,7 +13,9 @@ $this->load->view('login/menu_view');
     </script>
     <div class="container-fluid" >
     <div class="row-fluid">
-        <?php echo validation_errors(); ?>
+        <?php if ($mensagem = get_mensagem_sessao()) { ?>
+            <div class="row"><div class="alert alert-info" role="alert"><?= $mensagem ?></div></div>
+        <?php } ?>
         <h2 align="center" id="topo">Cadastro de Empresa</h2>
         <div id="erros" style="display: none;" class="alert alert-danger">
 

@@ -8,50 +8,96 @@ class Login extends CI_Controller
     {
         parent::__construct();
         $this->load->helper(array('form', 'url'));
-        $this->load->library(array('form_validation','Auditoria'));
-        $this->load->model(array('Login_model','Turma_model', 'Auditoria_model')); //carregando o model
+        $this->load->library(array('form_validation', 'LogArquivo'));
+        $this->load->model(array('Login_model','Turma_model','Session_model')); //carregando o model
+        $this->obj_Login_Model = new Login_model();
+        $this->obj_sessao_model = new Session_model();
+        date_default_timezone_set('America/Sao_Paulo');
+        $this->obj_log = new LogArquivo();
     }
 
     public function index()
     {
+        $dados['title'] = 'Login';
+        $this->load->view('login', $dados);
         $this->load->view('uteis/cabecalho');
-
-        $this->load->view('login');
-
         $this->load->view('uteis/rodape');
+    }
 
+    public function login() {
+        $dados['title'] = 'Login';
+        $this->load->view('login', $dados);
+        $this->load->view('uteis/cabecalho');
+        $this->load->view('uteis/rodape');
+    }
+
+    public function menu(){
+        $dados['title'] = 'Menu';
+        $dados['email'] =  $this->session->userdata('email_usuario');
+        $dados['empresa'] =  $this->session->userdata('empresa_nome');
+        $this->load->view('login/menu_view', $dados);
     }
 
     public function logar()
     {
-        //carregando o model Login_model
-
-
-        $usuario = $this->input->post('usuario');
-        $senha = md5($this->input->post('senha'));
-        $tipousuario = $this->input->post('tipousuario');
         //Regras de validação
-
-        $this->form_validation->set_rules('usuario', 'Username', 'required');
-        $this->form_validation->set_rules('senha', 'Password', 'required');
-        $logado = $this->Login_model->logarSistema($usuario, $senha); //Adicionando a variavel logado a função que carrega o login
+        $this->form_validation->set_rules('usuario', 'E-mail', 'trim|required');
+        $this->form_validation->set_rules('senha', 'Senha', 'required');
 
         if ($this->form_validation->run() == FALSE) {
+            //formulário com erros de preenchimento
+            if (validation_errors()) {
+                set_mensagem_sessao(validation_errors());
+            }else{
+                set_mensagem_sessao("Os dados estão incompletos");
+            }
+            $this->login();
 
         } else {
-            redirect('menu');
+            //verifica no banco se usuário e senha estao corretos
+            $dados_form = $this->input->post();
+            $retorno = $this->obj_Login_Model->logarSistema($dados_form['usuario'], $dados_form['senha']);
+            $retorno_empresa = $this->obj_Login_Model->BuscaEmpresaUsuario($retorno[0]->usuarioid);
 
-            if (isset($logado['idaluno']) AND isset($logado['usuario'])) { //se foi logado
-                $id = $logado['idaluno'];
-                var_dump($logado);
-                $this->session->set_userdata("id", $id);
-                $this->session->set_userdata("usuario_logado", $usuario);
-                $this->session->set_userdata("tipo_usuario", $tipousuario);
+            if($retorno_empresa != false) { //Se existe uma empresa definida para o usuário
+                $empresaid = $retorno_empresa[0]->empresaid;
+                $empresanome = $retorno_empresa[0]->razaosocial;
+            }
 
+            if (isset($retorno)) { //se foi logado
+
+                $empresaid = 0;
+                $empresanome = "";
+                //se o retorno for numerico os dados informados não existem ou estao incorretos
+                if ($retorno == 0) {
+                    set_mensagem_sessao('O e-mail inserido não corresponde a nenhum cadastro. <br/><a href="#">Clique aqui e cadastre-se!</a>');
+                } else {
+                    set_mensagem_sessao('A senha inserida está incorreta. <br/><a href="#">Esqueceu a senha?</a>');
+                }
+
+                $user_dados = array(
+                    'usuario_id' => $retorno[0]->usuarioid,
+                    'email_usuario' => $retorno[0]->email,
+                    'senha_usuario' => $retorno[0]->senha,
+                    'empresa_id' => $empresaid,
+                    'empresa_nome' => $empresanome
+                );
+
+                $dados_model_session = array(
+                    'usuario_id' => $retorno[0]->usuarioid,
+                    'email' => $retorno[0]->email,
+                    'senha' => $retorno[0]->senha,
+                    'empresa_id' => $empresaid,
+                    'empresa_nome' => $empresanome
+                );
+
+                $this->session->set_userdata($user_dados);
+                $this->obj_sessao_model->cadastrarSessao($dados_model_session);
+                $this->menu();
 
             } else {
-                echo ("<script>alert('Usuário ou senha inválidos, você será redirecionado')</script>");
-                redirect('login');
+
+                $this->login();
             }
         }
     }
@@ -120,8 +166,8 @@ class Login extends CI_Controller
 
     public function logout()
     {
-        session_destroy();
-        session_unset();
+        //session_destroy();
+        //session_unset();
         array();
         redirect('Login');
     }

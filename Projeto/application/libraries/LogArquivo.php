@@ -16,16 +16,10 @@ class LogArquivo
 
 
     function gravaLog($conteudo){
-        $arquivo = 'C:\temp\teste2.txt';
-        if(!file_exists($arquivo))
-        {
-            echo "Arquivo não existe no diretório marcado";
-        }
-        else
-        {
-            $fp = fopen($arquivo, 'a');
-                fwrite($fp, $conteudo);
-        }
+        $path = 'C:\temp\log.txt';
+
+        $fp = fopen($path, 'a');
+        fwrite($fp, $conteudo);
 
         fclose($fp);
     }

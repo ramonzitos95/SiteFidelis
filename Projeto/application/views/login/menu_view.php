@@ -3,7 +3,6 @@
         <nav class="navbar navbar-default">
             <div class="container-fluid">
 
-
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                         <span class="sr-only">Toggle navigation</span>
@@ -11,7 +10,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="<?php echo base_url('menu'); ?> ">Site Fidelis</a>
+                    <a class="navbar-brand" href="<?php echo base_url('Menu'); ?> ">Site Fidelis</a>
                 </div>
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -24,24 +23,10 @@
                             </ul>
                         </li>
                         <li class="dropdown">
-                            <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true">Turma<span class="caret"></span></a>
-                            <ul class="dropdown-menu">
-                                <li><a href="<?php echo base_url('Turma'); ?>">Cadastrar</a></li>
-                                <li><a href="<?php echo base_url('Turma/Consulta'); ?>">Listar Turmas</a></li>
-                            </ul>
-                        </li>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true">Disciplina <span class="caret"></span></a>
-                            <ul class="dropdown-menu">
-                                <li><a href="<?php echo base_url('Disciplina'); ?>">Cadastrar</a></li>
-                                <li><a href="<?php echo base_url('Disciplina/Consulta'); ?>">Listar Disciplinas</a></li>
-                            </ul>
-                        </li>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true">Grade <span class="caret"></span></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true">Promoções <span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li><a href="<?php echo base_url('Grade')?>">Cadastrar</a></li>
-                                <li><a href="<?php echo base_url('Grade/Consultar')?>">Listar Grades</a></li>
+                                <li><a href="<?php echo base_url('Grade/Consultar')?>">Consultar</a></li>
                             </ul>
                         </li>
                         <li class="dropdown">
@@ -52,6 +37,15 @@
                             </ul>
                         </li>
                         <li><a href="sobre.php">Sobre</a></li>
+                        <?php if(isset($email) and $email != null){ ?>
+                            <li><a href="#">Email: <?php echo $email; ?></a></li>
+                        <?php }
+                            echo $this->session->userdata('usuario_id');
+                        ?>
+
+                        <?php if(isset($empresa) and $empresa != null){ ?>
+                            <li><a href="#">Empresa: <?php echo $empresa; ?></a></li>
+                        <?php } ?>
                     </ul>
                 </div><!-- /.navbar-collapse -->
             </div><!-- /.container-fluid -->
