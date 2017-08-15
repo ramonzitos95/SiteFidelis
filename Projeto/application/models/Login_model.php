@@ -18,13 +18,22 @@ class Login_model extends CI_Model
         //Chamada o próprio construtor
         parent::__construct();
         $this->load->model('Turma_model');
+        $this->obj_log = new LogArquivo();
     }
 
     //Validando o login do aluno
     public function logarSistema($usuario, $senha)
     {
         $query = $this->db->get_where('empresa', array('usuario' => $usuario, 'senha' => $senha));
-        echo $this->db->last_query();
+        if($query->num_rows > 0){
+            return $query->result();
+        } else {
+            //grava a ultima query em arquivo
+            $this->obj_log->gravaLog($this->db->last_query());
+            return 0;
+        }
+
+
         return $query->result();
     }
 

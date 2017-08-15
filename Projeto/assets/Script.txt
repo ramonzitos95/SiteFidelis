@@ -12,14 +12,7 @@ CREATE TABLE empresa
 	situacao smallint,
 	foto character varying(100),
 	datacadastro date,
-	usuario integer default 0
-);
-
-
-CREATE TABLE usuario
-(
-	usuarioid Serial PRIMARY KEY,
-	email char(100),
+	usuario varchar(100),
 	senha text
 );
 
@@ -56,18 +49,4 @@ CREATE TABLE empresa_promocao
 	promocaoid integer,
 	razaosocial char(100),
 	descricaopromocao char(100)
-);
-
-CREATE TABLE IF NOT EXISTS  ci_sessions (
-    sequencial_id Serial NOT NULL,
-    sessao_id varchar(40) ,
-    endereco_ip varchar(16) DEFAULT '0',
-    user_agent varchar(50) ,
-    ultima_atividade integer DEFAULT 0,
-    usuario_id integer,
-    email varchar(100),
-    senha text,
-   	empresa_id integer,
-    empresa_nome varchar(100),
-    PRIMARY KEY (sequencial_id)
 );

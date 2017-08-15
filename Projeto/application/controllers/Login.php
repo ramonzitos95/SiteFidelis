@@ -33,7 +33,7 @@ class Login extends CI_Controller
 
     public function menu(){
         $dados['title'] = 'Menu';
-        $dados['email'] =  $this->session->userdata('email_usuario');
+        $dados['email'] =  $this->session->userdata('usuario');
         $dados['empresa'] =  $this->session->userdata('empresa_nome');
         $this->load->view('login/menu_view', $dados);
     }
@@ -58,9 +58,7 @@ class Login extends CI_Controller
             $dados_form = $this->input->post();
             $retorno = $this->obj_Login_Model->logarSistema($dados_form['usuario'], $dados_form['senha']);
 
-            var_dump($retorno);
-
-            if (isset($retorno)) { //se foi logado
+            if (isset($retorno) AND $retorno == 0) { //se foi logado
 
                 $empresaid = 0;
                 $empresanome = "";
@@ -72,24 +70,15 @@ class Login extends CI_Controller
                 }
 
                 $user_dados = array(
-                    'usuario_id' => $retorno->usuarioid,
-                    'email_usuario' => $retorno->email,
-                    'senha_usuario' => $retorno->senha,
-                    'empresa_id' => $empresaid,
-                    'empresa_nome' => $empresanome
+                    'usuario' => $retorno['email'],
+                    'senha' => $retorno['senha'],
+                    'empresa_id' => $retorno['empresaid'],
+                    'empresa_nome' => $retorno['razaosocial']
                 );
 
-                $dados_model_session = array(
-                    'usuario_id' => $retorno[0]->usuarioid,
-                    'email' => $retorno[0]->email,
-                    'senha' => $retorno[0]->senha,
-                    'empresa_id' => $empresaid,
-                    'empresa_nome' => $empresanome
-                );
 
                 $this->session->set_userdata($user_dados);
-                $this->obj_sessao_model->cadastrarSessao($dados_model_session);
-                $this->menu();
+                $this->login();
 
             } else {
 
