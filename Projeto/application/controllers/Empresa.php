@@ -19,10 +19,10 @@ class Empresa extends CI_Controller
 
     public function index()
     {
-        $dados_sessao = $this->obj_sessao->listaSessao(1);
+        //$dados_sessao = $this->obj_sessao->listaSessao(1);
         $dados['title'] = 'Menu';
-        $dados['email'] =  $dados_sessao['email'];
-        $dados['empresa'] =  $dados_sessao['empresa'];
+        $dados['email'] =  $this->session->userdata('email');
+        $dados['empresa'] =  $this->session->userdata('empresa');
         print_r($dados);
         $this->load->view('Empresa/cadastroEmpresa_view', $dados);
     }

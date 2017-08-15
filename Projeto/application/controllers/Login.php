@@ -57,12 +57,8 @@ class Login extends CI_Controller
             //verifica no banco se usuário e senha estao corretos
             $dados_form = $this->input->post();
             $retorno = $this->obj_Login_Model->logarSistema($dados_form['usuario'], $dados_form['senha']);
-            $retorno_empresa = $this->obj_Login_Model->BuscaEmpresaUsuario($retorno[0]->usuarioid);
 
-            if($retorno_empresa != false) { //Se existe uma empresa definida para o usuário
-                $empresaid = $retorno_empresa[0]->empresaid;
-                $empresanome = $retorno_empresa[0]->razaosocial;
-            }
+            var_dump($retorno);
 
             if (isset($retorno)) { //se foi logado
 
@@ -76,9 +72,9 @@ class Login extends CI_Controller
                 }
 
                 $user_dados = array(
-                    'usuario_id' => $retorno[0]->usuarioid,
-                    'email_usuario' => $retorno[0]->email,
-                    'senha_usuario' => $retorno[0]->senha,
+                    'usuario_id' => $retorno->usuarioid,
+                    'email_usuario' => $retorno->email,
+                    'senha_usuario' => $retorno->senha,
                     'empresa_id' => $empresaid,
                     'empresa_nome' => $empresanome
                 );
