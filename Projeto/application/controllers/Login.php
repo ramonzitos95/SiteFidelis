@@ -38,6 +38,11 @@ class Login extends CI_Controller
         $this->load->view('login/menu_view', $dados);
     }
 
+    public function CadastroUsuario(){
+        $dados['title'] = 'Cadastro de Usuário';
+        $this->load->view('login/Cadastrarusuario_view', $dados);
+    }
+
     public function logar()
     {
         //Regras de validação
@@ -46,11 +51,11 @@ class Login extends CI_Controller
 
         if ($this->form_validation->run() == FALSE) {
             //formulário com erros de preenchimento
-            if (validation_errors()) {
+            if (validation_errors())
                 set_mensagem_sessao(validation_errors());
-            }else{
+            else
                 set_mensagem_sessao("Os dados estão incompletos");
-            }
+            
             $this->login();
 
         } else {
@@ -64,7 +69,7 @@ class Login extends CI_Controller
                 $empresanome = "";
                 //se o retorno for numerico os dados informados não existem ou estao incorretos
                 if ($retorno == 0) {
-                    set_mensagem_sessao('O e-mail inserido não corresponde a nenhum cadastro. <br/><a href="#">Clique aqui e cadastre-se!</a>');
+                    set_mensagem_sessao('O e-mail inserido não corresponde a nenhum cadastro. <br/><a href="'.base_url('Login/CadastroUsuario').'">Clique aqui e cadastre-se!</a>');
                 } else {
                     set_mensagem_sessao('A senha inserida está incorreta. <br/><a href="#">Esqueceu a senha?</a>');
                 }
@@ -101,46 +106,35 @@ class Login extends CI_Controller
         $this->load->model('Login_model');
         //Adicionando a variaveis o que veio do form
         $usuario = $this->input->post('usuario');
-        $senha = md5($this->input->post('senha'));
-        $data = date('yyyy-mm-dd');
+        $senha = $this->input->post('senha');
+        $razaosocial = $this->input->post('razaosocial');
 
-        $tipousuario = $this->input->post('tipousuario');
-        $dadosAluno = array(
+        $dadosUsuario = array(
             'usuario' => $usuario,
             'senha' => $senha,
-            'datacadastro' => $data
+            'razaosocial' => $razaosocial
         );
 
         $this->form_validation->set_rules('usuario', 'Username', 'required');
         $this->form_validation->set_rules('senha', 'Password', 'required');
 
-        //Cadastrando aluno ou colaborador
-        if ($tipousuario == 'alu') {
-            $cadastrado = $this->Login_model->CadastrarAluno($dadosAluno);
-        } elseif ($tipousuario == 'col') {
-            $cadastrado = $this->Login_model->CadastrarColaborador($dadosAluno);
-        }
+        //Cadastrando usuario na empresa
+        $cadastrado = $this->Login_model->CadastrarUsuario($dadosUsuario);
 
         if ($this->form_validation->run() == FALSE) {
-            echo validation_errors();
+            //formulário com erros de preenchimento
+            if (validation_errors()) {
+                set_mensagem_sessao(validation_errors());
+            }else{
+                set_mensagem_sessao("Os dados estão incompletos");
+            }
+
+            $this->CadastrarUsuario();
         } else {
 
             if ($cadastrado) {
                 //gravando cadastro de usuario no log
-                $textoAuditoria = "Foi cadastrado o usuário: " . $usuario;
-                echo $this->Auditoria->gravandolog($texto);
-
-                $this->load->view('Pessoa/cadastrarPessoa_view');
-                    echo("<script>
-                    var resposta = (confirm('Desejas continuar cadastrando as informações restantes de usuário?'))
-                    if (resposta == true){
-                       window.location = 'http://localhost/CodeigniterBase/Projeto/Pessoa'; //Será redirecionado para o restante do cadastro
-                    }
-                    else
-                    {
-                       window.location = 'http://localhost/CodeigniterBase/Projeto/login';
-                    }
-               </script>");
+                $this->index();
 
             } else {
                 redirect('login/Cadastrar');

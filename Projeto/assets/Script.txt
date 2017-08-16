@@ -12,9 +12,10 @@ CREATE TABLE empresa
 	situacao smallint,
 	foto character varying(100),
 	datacadastro date,
-	usuario varchar(100),
+	usuario char(100),
 	senha text
 );
+
 
 CREATE TABLE promocoes
 (

@@ -49,22 +49,14 @@ class Login_model extends CI_Model
 
     }
 
-    public function CadastrarAluno($dados)//Função para cadastrar aluno
+    public function CadastrarUsuario($dados)//Função para cadastrar aluno
     {
 
-        if ($this->db->insert("aluno", $dados)) {
-            return true;
+        $query = $this->db->insert("empresa", $dados);
+        if ($query->num_rows > 0) {
+            return $query->result();
         } else {
-            return false;
-        }
-    }
-
-    public function CadastrarColaborador($dados)//Função para cadastrar colaborador
-    {
-        If ($this->db->insert("colaborador", $dados)){
-            return true;
-        } else {
-            return false;
+            return 0;
         }
     }
 

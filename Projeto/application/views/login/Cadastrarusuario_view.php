@@ -1,7 +1,12 @@
+<?php
+    $this->load->view('uteis/cabecalho');
+?>
 <div class="container-fluid" xmlns="http://www.w3.org/1999/html">
     <div class="row-fluid">
-        <?php echo validation_errors(); ?>
-        <h2>Cadastro de Alunos</h2>
+        <?php if ($mensagem = get_mensagem_sessao()) { ?>
+            <div class="row"><div class="alert alert-info" role="alert"><?= $mensagem ?></div></div>
+        <?php } ?>
+        <h2>Cadastro de Usuários</h2>
         <form action="<?php echo base_url('Login/ValidaCadastro'); ?>" method="post">
             <div class="form-group">
                 <label>Usuário</label>
@@ -12,11 +17,8 @@
                 <input type="password" name="senha" class="form-control">
             </div>
             <div class="form-group">
-                <p></p><label>Tipo de usuário</label></p><br>
-                <label>Colaborador</label><br>
-                <input type="radio" name="tipousuario" value="col"><br>
-                <label>Aluno</label><br>
-                <input type="radio" name="tipousuario" value="alu">
+                <p></p><label>Nome Empresa</label></p>
+                <input type="text" name="razaosocial" class="form-control">
             </div>
 
             <input type="submit" value="Cadastrar" class="btn btn-default">

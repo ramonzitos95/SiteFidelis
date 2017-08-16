@@ -13,8 +13,8 @@ class Menu extends CI_Controller {
 	public function index(){
         $dados_sessao = $this->obj_sessao->listaSessao();
         $dados['title'] = 'Menu';
-        $dados['email'] =  $dados_sessao['email'];
-        $dados['empresa'] =  $dados_sessao['empresa_nome'];
-        $this->load->view('login/menu_view');
+        $dados['email'] =  $this->session->userdata('usuario');
+        $dados['empresa'] =  $this->session->userdata('empresa');
+        $this->load->view('login/menu_view', $dados);
 	}
 }
