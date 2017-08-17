@@ -374,10 +374,9 @@ $config['sess_save_path'] = NULL;
 $config['sess_time_to_update'] = 300;
 $config['sess_regenerate_destroy'] = FALSE;
 $config['sess_encrypt_cookie'] = FALSE;
-$config['sess_use_database'] = TRUE; //SESSÃO ARMAZENA INFS NO BANCO DE DADOS
-$config['sess_table_name'] = TRUE; //Tabela ci_sessions armazena infs. das sessões
-$config['sess_match_ip'] = TRUE;
-$config['sess_match_useragent'] = TRUE;
+$config['sess_use_database'] = FALSE; //SESSÃO ARMAZENA INFS NO BANCO DE DADOS
+$config['sess_table_name'] = false; //Tabela ci_sessions armazena infs. das sessões
+$config['sess_match_useragent'] = false;
 
 
 /*

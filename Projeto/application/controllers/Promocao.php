@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+//defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Empresa extends CI_Controller
 {
@@ -16,11 +16,20 @@ class Empresa extends CI_Controller
         $this->obj_PromocaoModel = new Promocao_Model();
     }
 
-    public function index()
+    public function view($page = '')
     {
-        $dados['title'] = 'Menu';
+        $dados['title'] = 'Cadastro de Promoção';
         $dados['email'] =  $this->session->userdata('usuario');
         $dados['empresa'] =  $this->session->userdata('empresa_nome');
+        $dados['site'] =  $this->session->userdata('site');
+        $this->load->view('Promocao/CadastroPromocao_View', $dados);
+    }
+
+    public function cadastrar(){
+        $dados['title'] = 'Cadastro de Promoção';
+        $dados['email'] =  $this->session->userdata('usuario');
+        $dados['empresa'] =  $this->session->userdata('empresa_nome');
+        $dados['site'] =  $this->session->userdata('site');
         $this->load->view('Promocao/CadastroPromocao_View', $dados);
     }
 
@@ -99,7 +108,7 @@ class Empresa extends CI_Controller
             'usuario' => $usuariologado
         );
 
-        $cadastrado = $this->obj_Empresa_Model->CadastrarEmpresa($dadosCurso);
+        $cadastrado = $this->obj_PromocaoModel->CadastrarEmpresa($dadosCurso);
 
         if ($this->form_validation->run() == FALSE)
         {
@@ -117,7 +126,7 @@ class Empresa extends CI_Controller
 
     public function Consultar()
     {
-        $dados['empresas'] = $this->obj_Empresa_Model->listaEmpresas();
+        $dados['empresas'] = $this->obj_PromocaoModel->listaEmpresas();
         $this->load->view('Empresa/ConsultaEmpresa_view', $dados);
     }
 
@@ -131,7 +140,7 @@ class Empresa extends CI_Controller
             'dado' => $dado
         );
         $this->load->model('Curso_model');
-        $dados['empresas'] = $this->obj_Empresa_Model->listaEmpresaFiltro($dadosFiltro);
+        $dados['empresas'] = $this->obj_PromocaoModel->listaEmpresaFiltro($dadosFiltro);
 
         $this->load->view('Empresa/ConsultaEmpresaFiltro_view', $dados);
     }
@@ -139,7 +148,7 @@ class Empresa extends CI_Controller
 
     public function DeletarPromocao($id)
     {
-        $deletado = $this->obj_Empresa_Model->DeletarEmpresa($id);
+        $deletado = $this->obj_PromocaoModel->DeletarEmpresa($id);
         $dados = array(
             'id' => $id
         );
@@ -187,7 +196,7 @@ class Empresa extends CI_Controller
     }
 
     public function consultaPromocaoWS() {
-        $dados['empresas'] = $this->obj_Empresa_Model->listaEmpresasArray();
+        $dados['empresas'] = $this->obj_PromocaoModel->listaEmpresasArray();
         $json = json_encode($dados);
 
         echo $json;

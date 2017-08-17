@@ -9,9 +9,8 @@ class Login extends CI_Controller
         parent::__construct();
         $this->load->helper(array('form', 'url'));
         $this->load->library(array('form_validation', 'LogArquivo'));
-        $this->load->model(array('Login_model','Turma_model','Session_model')); //carregando o model
+        $this->load->model(array('Login_model')); //carregando o model
         $this->obj_Login_Model = new Login_model();
-        $this->obj_sessao_model = new Session_model();
         date_default_timezone_set('America/Sao_Paulo');
         $this->obj_log = new LogArquivo();
     }
@@ -75,7 +74,7 @@ class Login extends CI_Controller
                     'usuario' => $retorno[0]->usuario,
                     'senha' => $retorno[0]->senha,
                     'empresa_id' => $retorno[0]->empresaid,
-                    'empresa_nome' => $retorno[0]->razaosocial
+                    'empresa_nome' => $retorno[0]->razaosocial,
                     'site' => $retorno[0]->site
                 );
 
@@ -96,15 +95,6 @@ class Login extends CI_Controller
                 $this->login();
             }
         }
-    }
-
-    public function Cadastrar()
-    {
-        $this->load->view('uteis/cabecalho');
-
-        $this->load->view('login/Cadastraraluno_view');
-
-        $this->load->view('uteis/rodape');
     }
 
     function ValidaCadastro()
@@ -140,7 +130,7 @@ class Login extends CI_Controller
 
             if ($cadastrado) {
                 //gravando cadastro de usuario no log
-                $this->index();
+                $this->login();
 
             } else {
                 redirect('login/Cadastrar');
