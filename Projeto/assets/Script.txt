@@ -23,8 +23,10 @@ CREATE TABLE promocoes
 	descricaopromocao char(100),
 	datavalidade date,
 	situacao smallint,
-	foto bit varying,
-	empresa integer default 0
+	empresa integer default 0,
+	produto varchar(500),
+	valorproduto numeric,
+	foto character varying(100)
 );
 
 CREATE TABLE cliente

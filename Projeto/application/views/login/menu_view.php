@@ -25,8 +25,8 @@
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true">Promoções <span class="caret"></span></a>
                             <ul class="dropdown-menu">
-                                <li><a href="<?php echo base_url('Grade')?>">Cadastrar</a></li>
-                                <li><a href="<?php echo base_url('Grade/Consultar')?>">Consultar</a></li>
+                                <li><a href="<?php echo base_url('Promocao')?>">Cadastrar</a></li>
+                                <li><a href="<?php echo base_url('Promocao/Consultar')?>">Consultar</a></li>
                             </ul>
                         </li>
                         <li class="dropdown">
@@ -38,13 +38,13 @@
                         </li>
                         <li><a href="sobre.php">Sobre</a></li>
                         <?php if(isset($email) and $email != null){ ?>
-                            <li><a href="#">Email: <?php echo $email; ?></a></li>
+                            <li><a href="#">Usuário: <?php echo $email; ?></a></li>
                         <?php }
                             echo $this->session->userdata('usuario_id');
                         ?>
 
                         <?php if(isset($empresa) and $empresa != null){ ?>
-                            <li><a href="#">Empresa: <?php echo $empresa; ?></a></li>
+                            <li><a href="<?php echo $site; ?> ">Empresa: <?php echo $empresa; ?></a></li>
                         <?php } ?>
                     </ul>
                 </div><!-- /.navbar-collapse -->

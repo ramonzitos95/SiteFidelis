@@ -25,8 +25,9 @@ class Login_model extends CI_Model
     public function logarSistema($usuario, $senha)
     {
         $query = $this->db->get_where('empresa', array('usuario' => $usuario, 'senha' => $senha));
-        if($query->num_rows > 0){
+        if($query->result()){
             return $query->result();
+
         } else {
             //grava a ultima query em arquivo
             $this->obj_log->gravaLog($this->db->last_query());

@@ -12,31 +12,30 @@ class Empresa extends CI_Controller
         $this->load->library(array('form_validation', 'Imagem'));
         $this->obj_Imagem = new Imagem();
 
-        $this->load->model(array('Empresa_Model'));
-        $this->obj_Empresa_Model = new Empresa_Model();
+        $this->load->model(array('Promocao_Model'));
+        $this->obj_PromocaoModel = new Promocao_Model();
     }
 
     public function index()
     {
-        //$dados_sessao = $this->obj_sessao->listaSessao(1);
         $dados['title'] = 'Menu';
         $dados['email'] =  $this->session->userdata('usuario');
         $dados['empresa'] =  $this->session->userdata('empresa_nome');
-        $this->load->view('Empresa/cadastroEmpresa_view', $dados);
+        $this->load->view('Promocao/CadastroPromocao_View', $dados);
     }
 
     public function Alteracao($cursoid)
     {
         $dados['curso'] = $this->Curso_model->listaCurso($cursoid);
-        $this->load->View('Curso/AtualizaCurso_view', $dados);
+        $this->load->View('Promocao/AtualizaPromocao_View', $dados);
     }
 
-    public function cadastrarEmpresa()
+    public function cadastrarPromocao()
     {
         // definimos um nome aleatório para o diretório
         // definimos o path onde o arquivo será gravado
         $foto = $_FILES['foto'];
-        $path = "./assets/img/empresa";
+        $path = "./assets/img/promocao";
         $nomeFoto = "minhaimagem.jpg";
         if(!file_exists($path))
             mkdir($path, 0755);
@@ -56,6 +55,8 @@ class Empresa extends CI_Controller
         {
             set_mensagem_sessao($this->upload->display_errors());
             $this->index();
+            //$error = array('error' => $this->upload->display_errors());
+            //print_r($error);
         }
         else
         {
@@ -136,7 +137,7 @@ class Empresa extends CI_Controller
     }
 
 
-    public function DeletarEmpresa($id)
+    public function DeletarPromocao($id)
     {
         $deletado = $this->obj_Empresa_Model->DeletarEmpresa($id);
         $dados = array(
@@ -149,7 +150,7 @@ class Empresa extends CI_Controller
         }
     }
 
-    public function AtualizaCurso(){
+    public function AtualizarPromocao(){
 
         $this->load->model('Curso_model');
 
@@ -185,11 +186,11 @@ class Empresa extends CI_Controller
         }
     }
 
-    public function consultaEmpresaWS() {
+    public function consultaPromocaoWS() {
         $dados['empresas'] = $this->obj_Empresa_Model->listaEmpresasArray();
         $json = json_encode($dados);
 
-        return $json;
+        echo $json;
     }
 
 }

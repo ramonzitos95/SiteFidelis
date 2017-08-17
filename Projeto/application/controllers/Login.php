@@ -35,12 +35,18 @@ class Login extends CI_Controller
         $dados['title'] = 'Menu';
         $dados['email'] =  $this->session->userdata('usuario');
         $dados['empresa'] =  $this->session->userdata('empresa_nome');
+        $dados['site'] =  $this->session->userdata('site');
         $this->load->view('login/menu_view', $dados);
     }
 
     public function CadastroUsuario(){
         $dados['title'] = 'Cadastro de Usuário';
         $this->load->view('login/Cadastrarusuario_view', $dados);
+    }
+
+    public function AlterarSenha(){
+        $dados['title'] = 'Alteração de Senha';
+        $this->load->view('login/AlterarSenha_View', $dados);
     }
 
     public function logar()
@@ -63,29 +69,29 @@ class Login extends CI_Controller
             $dados_form = $this->input->post();
             $retorno = $this->obj_Login_Model->logarSistema($dados_form['usuario'], $dados_form['senha']);
 
-            if (isset($retorno) AND $retorno == 0) { //se foi logado
-
-                $empresaid = 0;
-                $empresanome = "";
-                //se o retorno for numerico os dados informados não existem ou estao incorretos
-                if ($retorno == 0) {
-                    set_mensagem_sessao('O e-mail inserido não corresponde a nenhum cadastro. <br/><a href="'.base_url('Login/CadastroUsuario').'">Clique aqui e cadastre-se!</a>');
-                } else {
-                    set_mensagem_sessao('A senha inserida está incorreta. <br/><a href="#">Esqueceu a senha?</a>');
-                }
+            if ($retorno > 0) { //se foi logado
 
                 $user_dados = array(
-                    'usuario' => $retorno['email'],
-                    'senha' => $retorno['senha'],
-                    'empresa_id' => $retorno['empresaid'],
-                    'empresa_nome' => $retorno['razaosocial']
+                    'usuario' => $retorno[0]->usuario,
+                    'senha' => $retorno[0]->senha,
+                    'empresa_id' => $retorno[0]->empresaid,
+                    'empresa_nome' => $retorno[0]->razaosocial
+                    'site' => $retorno[0]->site
                 );
 
 
                 $this->session->set_userdata($user_dados);
-                $this->login();
+                $this->menu();
 
             } else {
+
+                //se o retorno for numerico os dados informados não existem ou estao incorretos
+                if ($retorno == 0) {
+                    var_dump($retorno);    
+                    set_mensagem_sessao('O e-mail inserido não corresponde a nenhum cadastro. <br/><a href="'.base_url('Login/CadastroUsuario').'">Clique aqui e cadastre-se!</a>');
+                } else {
+                    set_mensagem_sessao('A senha inserida está incorreta. <br/><a href="'.base_url('Login/CadastroUsuario').'">Esqueceu a senha?</a>');
+                }
 
                 $this->login();
             }

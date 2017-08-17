@@ -16,7 +16,7 @@ class LogArquivo
 
 
     function gravaLog($conteudo){
-        $path = 'C:\temp\log.txt';
+        $path = 'C:\temp\log.txt' ;
 
         $fp = fopen($path, 'a');
         fwrite($fp, $conteudo);

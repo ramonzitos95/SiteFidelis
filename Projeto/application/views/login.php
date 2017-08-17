@@ -18,11 +18,8 @@
 
         </form>
     </div>
-    <div class="col-md-offset-10">
-        <a href="<?php echo base_url('LoginAdm');?>" class="alert-link">Administrador</a>
-    </div>
     <div>
-        <a href="<?php echo base_url('Login/Cadastrar');?>" class="alert-link">Cadastre-se</a>
+        <a href="<?php echo base_url('Login/CadastroUsuario');?>" class="alert-link">Cadastre-se</a>
     </div>
     <div>
         <a href="<?php echo base_url('Login');?>" class="alert-dismissable">Logout</a>
