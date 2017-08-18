@@ -22,13 +22,20 @@ class Empresa extends CI_Controller
         $dados['title'] = 'Menu';
         $dados['email'] =  $this->session->userdata('usuario');
         $dados['empresa'] =  $this->session->userdata('empresa_nome');
+        $dados['site'] =  $this->session->userdata('site');
         $this->load->view('Empresa/cadastroEmpresa_view', $dados);
     }
 
-    public function Alteracao($cursoid)
+    public function Alterar()
     {
-        $dados['curso'] = $this->Curso_model->listaCurso($cursoid);
-        $this->load->View('Curso/AtualizaCurso_view', $dados);
+        $dados['email'] =  $this->session->userdata('usuario');
+        $dados['empresa_nome'] =  $this->session->userdata('empresa_nome');
+        $dados['site'] =  $this->session->userdata('site');
+        $empresaid = $this->session->userdata('empresa_id');
+
+        $dados['empresa'] = $this->Empresa_Model->listaEmpresa($empresaid); 
+
+        $this->load->View('Empresa/AtualizarEmpresa_view', $dados);
     }
 
     public function cadastrarEmpresa()
@@ -74,7 +81,6 @@ class Empresa extends CI_Controller
         $situacao = $this->input->post('situacao');
         $caminhoFoto = $configUpload['upload_path'];
         $usuariologado = $this->session->userdata('usuario_id');
-        //echo $caminhoFoto;
 
         if($situacao == "ativo"){
             $situacao = 1;
@@ -82,8 +88,7 @@ class Empresa extends CI_Controller
             $situacao = 0;
         }
 
-        $dadosCurso = array(
-            //'empresaid' => $empresaid,
+        $dadosEmpresa = array(
             'razaosocial' => $razaosocial,
             'cnpj' => $cnpj,
             'cep' => $cep,
@@ -98,7 +103,7 @@ class Empresa extends CI_Controller
             'usuario' => $usuariologado
         );
 
-        $cadastrado = $this->obj_Empresa_Model->CadastrarEmpresa($dadosCurso);
+        $cadastrado = $this->obj_Empresa_Model->CadastrarEmpresa($dadosEmpresa);
 
         if ($this->form_validation->run() == FALSE)
         {
@@ -149,46 +154,47 @@ class Empresa extends CI_Controller
         }
     }
 
-    public function AtualizaCurso(){
+    public function AtualizarEmpresa(){
 
-        $this->load->model('Curso_model');
-
-        $cursoid = $this->input->post('cursoid');
-        $cursonome = $this->input->post('cursonome');
-        $cargahoraria = ($this->input->post('cargahoraria'));
-        $ementa = $this->input->post('ementa');
-        $bibliografia = $this->input->post('bibliografia');
-        $modocurso = $this->input->post('modocurso');
-        $origem = $this->input->post('origem');
+        $empresaid = $this->input->post('empresaid');
+        $razaosocial = $this->input->post('razaosocial');
+        $cnpj = ($this->input->post('cnpj'));
+        $cep = $this->input->post('cep');
+        $site = $this->input->post('site');
+        $telefone = $this->input->post('telefone');
+        $endereco = $this->input->post('endereco');
+        $cidade = $this->input->post('cidade');
+        $estado = $this->input->post('estado');
+        $datacadastro = $this->input->post('datacadastro');
         $situacao = $this->input->post('situacao');
-        if($situacao == "ativo"){
-            $situacao = true;
-        }elseif ($situacao == "inativo"){
-            $situacao = false;
-        }
+        //$caminhoFoto = "";
+        $usuariologado = $this->session->userdata('usuario_id');
 
-        $dadosCurso = array(
-            'cursoid' => $cursoid,
-            'cursonome' => $cursonome,
-            'cargahoraria' => $cargahoraria,
-            'ementa' => $ementa,
-            'bibliografia' => $bibliografia,
-            'modocurso' => $modocurso,
-            'origemcurso' => $origem,
-            'situacao' => $situacao
+       $dadosEmpresa = array(
+            'empresaid' => $empresaid,
+            'razaosocial' => $razaosocial,
+            'cnpj' => $cnpj,
+            'cep' => $cep,
+            'site' => $site,
+            'telefone' => $telefone,
+            'endereco' => $endereco,
+            'cidade' => $cidade,
+            'estado' => $estado,
+            'datacadastro' => $datacadastro,
+            'situacao' => $situacao,
+            //'foto' => $caminhoFoto,
         );
 
-        $atualizado = $this->Curso_model->atualizaCurso($dadosCurso);
+        $atualizado = $this->Empresa_Model->AtualizarEmpresa($dadosEmpresa);
         if($atualizado){
-            echo '<script>alert("O curso foi atualizado com sucesso");</script>';
-            redirect('Menu');
+            $this->Alterar();
         }
     }
 
     public function consultaEmpresaWS() {
         $dados['empresas'] = $this->obj_Empresa_Model->listaEmpresasArray();
         $json = json_encode($dados);
-
+        $json = serialize($json); //Converte para objeto
         return $json;
     }
 

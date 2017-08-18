@@ -86,7 +86,6 @@ class Login extends CI_Controller
 
                 //se o retorno for numerico os dados informados não existem ou estao incorretos
                 if ($retorno == 0) {
-                    var_dump($retorno);    
                     set_mensagem_sessao('O e-mail inserido não corresponde a nenhum cadastro. <br/><a href="'.base_url('Login/CadastroUsuario').'">Clique aqui e cadastre-se!</a>');
                 } else {
                     set_mensagem_sessao('A senha inserida está incorreta. <br/><a href="'.base_url('Login/CadastroUsuario').'">Esqueceu a senha?</a>');

@@ -54,10 +54,10 @@ class Curso_model extends CI_Model
 
     }
 
-    public function listaCurso($id)
+    public function listaEmpresa($id)
     {
-        $this->db->where('cursoid', $id);
-        return $this->db->get('curso')->result();
+        $this->db->where('empresaid', $id);
+        return $this->db->get('empresa')->result();
     }
 
 

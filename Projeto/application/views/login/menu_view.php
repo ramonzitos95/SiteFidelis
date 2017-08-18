@@ -19,13 +19,14 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true">Empresa <span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li><a href="<?php echo base_url('Empresa'); ?>">Cadastrar</a></li>
-                                <li><a href="<?php echo base_url('Empresa/Consultar')?>">Listar Empresas</a></li>
+                                <li><a href="<?php echo base_url('Empresa/Alterar'); ?>">Atualizar Dados</a></li>
+                                <li><a href="<?php echo base_url('Empresa/Consultar')?>">Consultar</a></li>
                             </ul>
                         </li>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true">Promoções <span class="caret"></span></a>
                             <ul class="dropdown-menu">
-                                <li><a href="<?php echo base_url('Promocao/cadastrar')?>">Cadastrar</a></li>
+                                <li><a href="<?php echo base_url('Promocaor')?>">Cadastrar</a></li>
                                 <li><a href="<?php echo base_url('Promocao/Consultar')?>">Consultar</a></li>
                             </ul>
                         </li>
@@ -43,9 +44,11 @@
                             echo $this->session->userdata('usuario_id');
                         ?>
 
-                        <?php if(isset($empresa) and $empresa != null){ ?>
-                            <li><a href="<?php echo $site; ?> ">Empresa: <?php echo $empresa; ?></a></li>
+                        <?php if(isset($empresa_nome) and $empresa_nome != null){ ?>
+                          <li><a href="<?php echo $site ?>" target="_blank">Empresa: <?php echo 
+                          $empresa_nome; ?></a></li>
                         <?php } ?>
+                        <li><a href="<?php echo base_url('Logout'); ?>">Logout</a></li>
                     </ul>
                 </div><!-- /.navbar-collapse -->
             </div><!-- /.container-fluid -->

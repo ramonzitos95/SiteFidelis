@@ -62,4 +62,4 @@ $route['disciplina'] = 'Disciplina';
 $route['grade'] = 'Grade';
 $route['cep'] = 'Cep';
 $route['empresa'] = 'Empresa';
-$route['promocao'] = 'Promocao';
+$route['Promocao'] = 'Promocao';

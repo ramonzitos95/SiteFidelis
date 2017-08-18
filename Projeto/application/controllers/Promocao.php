@@ -16,7 +16,7 @@ class Empresa extends CI_Controller
         $this->obj_PromocaoModel = new Promocao_Model();
     }
 
-    public function view($page = '')
+    public function index()
     {
         $dados['title'] = 'Cadastro de Promoção';
         $dados['email'] =  $this->session->userdata('usuario');
@@ -25,7 +25,7 @@ class Empresa extends CI_Controller
         $this->load->view('Promocao/CadastroPromocao_View', $dados);
     }
 
-    public function cadastrar(){
+    public function Cadastrar(){
         $dados['title'] = 'Cadastro de Promoção';
         $dados['email'] =  $this->session->userdata('usuario');
         $dados['empresa'] =  $this->session->userdata('empresa_nome');
