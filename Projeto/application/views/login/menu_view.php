@@ -18,7 +18,7 @@
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true">Empresa <span class="caret"></span></a>
                             <ul class="dropdown-menu">
-                                <li><a href="<?php echo base_url('Empresa'); ?>">Cadastrar</a></li>
+                                <li><a href="<?php echo base_url('Empresa/Novo'); ?>">Cadastrar</a></li>
                                 <li><a href="<?php echo base_url('Empresa/Alterar'); ?>">Atualizar Dados</a></li>
                                 <li><a href="<?php echo base_url('Empresa/Consultar')?>">Consultar</a></li>
                             </ul>
@@ -27,15 +27,7 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true">Promoções <span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li><a href="<?php echo base_url('Promocao')?>">Cadastrar</a></li>
-                                <li><a href="<?php echo base_url('Promocao/CadastroPromocao_View')?>">Cadastrar</a></li>
                                 <li><a href="<?php echo base_url('Promocao/Consultar')?>">Consultar</a></li>
-                            </ul>
-                        </li>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true">Administrador <span class="caret"></span></a>
-                            <ul class="dropdown-menu">
-                                <li><a href="<?php echo base_url('login/cadastrar'); ?>">Cadastrar Usuários</a></li>
-                                <li><a href="<?php echo base_url('Pessoa'); ?>">Cadastrar Pessoas</a></li>
                             </ul>
                         </li>
                         <li><a href="sobre.php">Sobre</a></li>

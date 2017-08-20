@@ -75,7 +75,7 @@ class Empresa_Model extends CI_Model
 
     }
 
-    public function listaEmpresa($id)
+    public function listaPromocao($id)
     {
         $this->db->where('promocaoid', $id);
         return $this->db->get('promocoes')->result();

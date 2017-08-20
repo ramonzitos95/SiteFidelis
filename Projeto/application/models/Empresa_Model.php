@@ -4,91 +4,55 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Empresa_Model extends CI_Model
 {
-    public $title;
-    public $content;
-    public $date;
 
-    public function __construct()
-    {
-        //Chamada o próprio construtor
+    public $empresaid;
+    public $razaosocial;
+    public $cnpj;
+    public $cep;
+    public $site;
+    public $telefone;
+    public $endereco;
+    public $cidade;
+    public $estado;
+    public $situacao;
+    public $foto;
+    public $datacadastro;
+    public $usuario;
+    public $senha;
+    
+    public function __construct() {
         parent::__construct();
     }
 
-    public function CadastrarEmpresa($dados)//Função para cadastrar Pessoa
-    {
-        If ($this->db->insert("empresa", $dados))
-            return true;
-
-        return false;
-    }
-
-    public function listaEmpresas()
-    {
-        $this->db->order_by('empresaid', 'asc');
-        $query = $this->db->get('empresa');
-        return $query->result();
-    }
-
-    public function listaEmpresasArray()
-    {
-        $this->db->order_by('empresaid', 'asc');
-        $query = $this->db->get('empresa');
-        return $query->result_array();
+    function preencher_do_post($dados) {
+        foreach (get_object_vars($this) as $key => $value) {
+            if (isset($dados[$key]))
+                $this->$key = $dados[$key];
+        }
 
     }
 
-    //Consulta com filtro
-    public function listaEmpresaFiltro($dadosFiltro)
-    {
-        $operacao = $dadosFiltro['operacao'];
-        $dado = $dadosFiltro['dado'];
+    public function preencher_array_do_banco($array) {
+        $lista_empresas = array();
+        foreach ($array as $item) {
+            $obj_Empresa_Model = new Empresa_Model();
+            foreach (get_object_vars($obj_Empresa_Model) as $key => $value) {
+                if (isset($item->$key))
+                    $obj_Empresa_Model->$key = $item->$key;
+            }
+            array_push($lista_empresas, $obj_Empresa_Model);
+        }
+        return $lista_empresas;
+    }
 
-        switch ($operacao) {
-            Case "razaosocial":
-                $this->db->select('*');
-                $this->db->from('empresa');
-                $this->db->like('razaosocial', $dado);
-                return $this->db->get()->result();
+    public function preencher_do_banco($dados) {
+        if (isset($dados[0]))
+            $dados = $dados[0];
 
-            Case "endereco":
-                $this->db->select('*');
-                $this->db->from('empresa');
-                $this->db->like('endereco', $dado);
-                return $this->db->get()->result();
-
-            Case "cidade":
-                $this->db->select('*');
-                $this->db->from('empresa');
-                $this->db->like('cidade', $dado);
-                return $this->db->get()->result();
+        foreach (get_object_vars($this) as $key => $value) {
+            if (isset($dados->$key))
+                $this->$key = $dados->$key;
         }
     }
 
-    public function DeletarEmpresa($id)
-    {
-        If ($id != null)
-        {
-            $this->db->delete('empresa', array('empresaid' => $id));
-            return $id;
-        }
-        Return False;
-
-    }
-
-    public function listaEmpresa($id)
-    {
-        $this->db->where('empresaid', $id);
-        return $this->db->get('empresa')->result();
-    }
-
-    public function AtualizarEmpresa($dados)
-    {
-        $this->db->where("empresaid", $dados['empresaid']);
-        $Atualizado = $this->db->update("empresa", $dados);
-        if ($Atualizado) {
-            return true;
-        }
-            return false;
-
-    }
 }

@@ -3,14 +3,14 @@
             <footer>
 
                 <address>
-                    <strong class="show">Grupo Uniasselvi - ASSEVIM</strong>
+                    <strong class="show">Site Promobusque</strong>
 
-                                    "Rua Gregório Diegoli, 35"
+                                    "Anúncie suas promoções"
                     <br>
-                                    "Brusque - SC "
+                                    "Garanta clientes fiéis para seu estabelecimento"
                     <br>
                     <abbr>Telefone:</abbr>
-                    <p class="text-center"> "(47) 3044-9000" </p>
+                    <p class="text-center"> "(47) 99960-7600" </p>
                 </address>
 
             </footer>

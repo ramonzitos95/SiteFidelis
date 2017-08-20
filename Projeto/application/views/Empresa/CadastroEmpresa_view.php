@@ -16,55 +16,116 @@
         <?php if ($mensagem = get_mensagem_sessao()) { ?>
             <div class="row"><div class="alert alert-info" role="alert"><?= $mensagem ?></div></div>
         <?php } ?>
-        <h2 align="center" id="topo">Cadastro de Empresa</h2>
+        <h2 align="center" id="topo"><?php if(isset($tituloprincipal)) echo $tituloprincipal ?></h2>
         <div id="erros" style="display: none;" class="alert alert-danger">
 
         </div>
 
-        <form action="<?php echo base_url('Empresa/cadastrarEmpresa'); ?>" id="form" method="post" enctype="multipart/form-data">
-            <div class="form-group col-md-3">
-                <b><label>Logo da Empresa</label></b><br>
-                Selecione uma imagem: <input type="file" id="uploadImage" name="foto"  onchange="PreviewImage();"/><br /><br />
+        <form action="<?php if(isset($action)) echo base_url($action) ?>" id="form" method="post" enctype="multipart/form-data">
+
+            <div class="row">
+                <div class="form-group col-md-3">
+                    <b><label>Logo da Empresa</label></b><br>
+                    Selecione uma imagem: <input type="file" id="uploadImage" name="foto"  onchange="PreviewImage();"/><br /><br />
+                </div>
+                <div class="form-group col-md-2">
+                    <img id="uploadPreview" style="width: 100px; height: 75px; border-style: solid; border-width: 1px;" />
+                </div>
             </div>
-            <div class="form-group col-md-2">
-                <img id="uploadPreview" style="width: 100px; height: 75px; border-style: solid; border-width: 1px;" />
+            <input type="hidden" name="empresaid" id="empresaid" class="form-control"
+                   value="<?php (isset($obj_empresa_model))?$obj_empresa_model->empresaid:''; ?>" required>
+
+            <div class="row">
+                <div class="form-group col-md-5">
+                    <label>Razão Social</label><br>
+                    <input type="text" name="razaosocial" id="razaosocial" class="form-control"
+                           value="<?php (isset($obj_empresa_model))?$obj_empresa_model[0]->razaosocial:''; ?>" required>
+                </div>
             </div>
-            <div class="form-group col-md-12">
-                <label>Razão Social</label><br>
-                <input type="text" name="razaosocial" id="razaosocial" class="form-control" required>
+
+            <div class="row">
+                <div class="form-group col-md-3">
+                    <label>CNPJ</label><br>
+                    <input type="text" name="cnpj" id="cnpj" class="form-control"
+                           value="<?php (isset($obj_empresa_model))?$obj_empresa_model->{'cnpj'}:''; ?>" required>
+                </div>
+                <div class="form-group col-md-2">
+                    <label>CEP</label><br>
+                    <input type="text" name="cep" id="cep" class="form-control"
+                           value="<?php (isset($obj_empresa_model))?$obj_empresa_model[0]->cep:''; ?>"required>
+                </div>
             </div>
-            <div class="form-group col-md-12">
-                <label>CNPJ</label><br>
-                <input type="text" name="cnpj" id="cnpj" class="form-control" required>
+
+            <div class="row">
+                <div class="form-group col-md-3">
+                    <b><label>Site</label></b><br>
+                    <input type="text" name="site" id="site" class="form-control"
+                           value="<?php (isset($obj_empresa_model))?$obj_empresa_model[0]->site:''; ?>">
+                </div>
+                <div class="form-group col-md-2">
+                    <b><label>Telefone</label></b><br>
+                    <input type="text" name="telefone" id="telefone" class="form-control"
+                           value="<?php (isset($obj_empresa_model))?$obj_empresa_model[0]->telefone:''; ?>">
+                </div>
             </div>
-            <div class="form-group col-md-4">
-                <label>CEP</label><br>
-                <input type="text" name="cep" id="cep" class="form-control" required>
+
+            <div class="row">
+                <div class="form-group col-md-5">
+                    <b><label>Endereco</label></b><br>
+                    <input type="text" name="endereco" id="endereco" class="form-control"
+                           value="<?php (isset($obj_empresa_model))?$obj_empresa_model[0]->endereco:''; ?>"required>
+                </div>
             </div>
-            <div class="form-group col-md-4">
-                <b><label>Site</label></b><br>
-                <input type="text" name="site" id="site" class="form-control" required>
+
+            <div class="row">
+                <div class="form-group col-md-3">
+                    <b><label>cidade</label></b><br>
+                    <input type="text" name="cidade" id="cidade" class="form-control"
+                           value="<?php (isset($obj_empresa_model))?$obj_empresa_model[0]->cidade:''; ?>"required>
+                </div>
+                <div class="form-group col-md-2">
+                    <?php
+                    //UF = ds_uf
+                    echo form_label('UF:', 'estado');
+                    $optionEstados = Array(
+                        'Acre' => 'Acre',
+                        'Alagoas' => 'Alagoas',
+                        'Amapá' => 'Amapá',
+                        'Amazonas' => 'Amazonas',
+                        'Bahia' => 'Bahia',
+                        'Ceará' => 'Ceará',
+                        'Distrito Federal' => 'Distrito Federal',
+                        'Espírito Santo' => 'Espírito Santo',
+                        'Goiás' => 'Goiás',
+                        'Maranhão' => 'Maranhão',
+                        'Mato Grosso' => 'Mato Grosso',
+                        'Mato Grosso do Sul' => 'Mato Grosso do Sul',
+                        'Minas Gerais' => 'Minas Gerais',
+                        'Pará' => 'Pará',
+                        'Paraíba' => 'Paraíba',
+                        'Paraná' => 'Paraná',
+                        'Pernambuco' => 'Pernambuco',
+                        'Piauí' => 'Piauí',
+                        'Rio de Janeiro' => 'Rio de Janeiro',
+                        'Rio Grande do Norte' => 'Rio Grande do Norte',
+                        'Rio Grande do Sul' => 'Rio Grande do Sul',
+                        'Santa Catarina' => 'Santa Catarina',
+                        'São Paulo' => 'São Paulo',
+                        'Sergipe' => 'Sergipe',
+                        'Tocantins' => 'Tocantins'
+                    );
+                    echo form_dropdown('estado', $optionEstados, 'Santa Catarina',(isset($obj_empresa_model))? $obj_empresa_model[0]->estado:'Selecione', 'class="form-control"');
+                    ?>
+                </div>
             </div>
-            <div class="form-group col-md-4">
-                <b><label>Telefone</label></b><br>
-                <input type="text" name="telefone" id="telefone" class="form-control" required>
+
+            <div class="row">
+                <div class="form-group col-md-2">
+                    <label>Data de Cadastro</label><br>
+                    <input type="date" name="datacadastro" id="datacadastro" class="form-control"
+                           value="<?php date("dd/mm/yyyy") ?>" required>
+                </div>
             </div>
-            <div class="form-group col-md-4">
-                <b><label>Endereco</label></b><br>
-                <input type="text" name="endereco" id="endereco" class="form-control" required>
-            </div>
-            <div class="form-group col-md-4">
-                <b><label>cidade</label></b><br>
-                <input type="text" name="cidade" id="cidade" class="form-control" required>
-            </div>
-            <div class="form-group col-md-4">
-                <b><label>Estado</label></b><br>
-                <input type="text" name="estado" id="estado" class="form-control" required>
-            </div>
-            <div class="form-group col-md-6">
-                <label>Data de Cadastro</label><br>
-                <input type="date" name="datacadastro" id="datacadastro" class="form-control" required>
-            </div><br>
 
             <div class="col-md-12">
                 <input type="submit" value="Cadastrar" class="btn btn-default">

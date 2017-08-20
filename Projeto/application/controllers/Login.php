@@ -9,10 +9,19 @@ class Login extends CI_Controller
         parent::__construct();
         $this->load->helper(array('form', 'url'));
         $this->load->library(array('form_validation', 'LogArquivo'));
-        $this->load->model(array('Login_model')); //carregando o model
+
+        $this->load->model('Login_model'); //carregando o model
         $this->obj_Login_Model = new Login_model();
+
         date_default_timezone_set('America/Sao_Paulo');
         $this->obj_log = new LogArquivo();
+
+        $this->load->model('Empresa_model'); //carregando o model
+        $this->obj_Empresa_Model = new Empresa_Model();
+
+        $this->load->model('Empresa_DAO'); //carregando o model
+        $this->obj_Empresa_DAO = new Empresa_DAO();
+
     }
 
     public function index()
@@ -77,7 +86,11 @@ class Login extends CI_Controller
                     'empresa_nome' => $retorno[0]->razaosocial,
                     'site' => $retorno[0]->site
                 );
+                array_push($_SESSION, $user_dados);
+                echo  $_SESSION["empresa_id"];
 
+                $retornoEmpresa = $this->obj_Empresa_DAO->listaEmpresa($user_dados['empresa_id']);
+                $this->obj_Empresa_Model->preencher_do_banco($retornoEmpresa);
 
                 $this->session->set_userdata($user_dados);
                 $this->menu();

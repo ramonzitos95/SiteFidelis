@@ -9,37 +9,60 @@ class Empresa extends CI_Controller
         parent::__construct();
 
         $this->load->helper(array('form'));
-        $this->load->library(array('form_validation', 'Imagem'));
+        $this->load->library(array('form_validation', 'Imagem', 'session'));
         $this->obj_Imagem = new Imagem();
+
+        $this->load->model(array('Empresa_DAO'));
+        $this->obj_Empresa_DAO = new Empresa_DAO();
 
         $this->load->model(array('Empresa_Model'));
         $this->obj_Empresa_Model = new Empresa_Model();
     }
 
-    public function index()
+    public function novo()
     {
-        //$dados_sessao = $this->obj_sessao->listaSessao(1);
+        $this->load->library('session');
         $dados['title'] = 'Menu';
         $dados['email'] =  $this->session->userdata('usuario');
         $dados['empresa'] =  $this->session->userdata('empresa_nome');
         $dados['site'] =  $this->session->userdata('site');
-        $this->load->view('Empresa/cadastroEmpresa_view', $dados);
+        $dados['action'] = 'Empresa/CadastrarEmpresa';
+        $dados['tituloprincipal'] = 'Cadastro de Empresa';
+        $this->load->view('Empresa/CadastroEmpresa_view', $dados);
     }
 
     public function Alterar()
     {
+        $this->load->library('session');
         $dados['email'] =  $this->session->userdata('usuario');
-        $dados['empresa_nome'] =  $this->session->userdata('empresa_nome');
+        $dados['empresa'] =  $this->session->userdata('empresa_nome');
         $dados['site'] =  $this->session->userdata('site');
-        $empresaid = $this->session->userdata('empresa_id');
+        $dadosEmpresa = $this->obj_Empresa_DAO->buscaEmpresa($this->obj_Empresa_Model);
+        $objetoEmpresa = $this->obj_Empresa_Model->preencher_do_banco($dadosEmpresa);
+        var_dump($objetoEmpresa);
+        $dados['obj_empresa_model'] = $objetoEmpresa;
+        $dados['title'] = "Alterar Participante";
+        $dados['action'] = 'Empresa/AtualizarEmpresa';
+        $dados['tituloprincipal'] = 'Atualizaçao da Empresa';
 
-        $dados['empresa'] = $this->Empresa_Model->listaEmpresa($empresaid); 
-
-        $this->load->View('Empresa/AtualizarEmpresa_view', $dados);
+        $this->load->view('Empresa/CadastroEmpresa_view', $dados);
     }
 
     public function cadastrarEmpresa()
     {
+        $this->load->library('form_validation');
+        //Validando o nome
+        $this->form_validation->set_rules('razaosocial', 'Razão social', 'required|min_length[10]|max_length[100]|trim', array('required' => 'Você deve preencher a %s.'));
+        //Validando o CNPJ
+        $this->form_validation->set_rules('cnpj', 'CPF', 'required|max_length[20]|trim|is_unique[empresa.cnpj]');
+        //Validando o CEP
+        $this->form_validation->set_rules('ds_cep', 'CEP', 'trim|max_length[10]');
+        //Validando o Logradouro
+        $this->form_validation->set_rules('endereco', 'Endereço', 'trim');
+        //Validando a cidade
+        $this->form_validation->set_rules('cidade', 'Cidade', 'trim');
+        //Validando o estado
+        $this->form_validation->set_rules('estado', 'Estado', 'trim');
         // definimos um nome aleatório para o diretório
         // definimos o path onde o arquivo será gravado
         $foto = $_FILES['foto'];
@@ -58,70 +81,44 @@ class Empresa extends CI_Controller
         // passamos as configurações para a library upload
         $this->load->library('upload');
         $this->upload->initialize($configUpload);
+        $this->upload->do_upload('foto');
+        $this->upload->data();
+//        if ( ! $this->upload->do_upload('foto')) //se o upload foi processado
+//        {
+//            set_mensagem_sessao($this->upload->display_errors());
+//            $this->novo();
+//        }
+//        else
+//        {
+//            $data = array('upload_data' => $this->upload->data());
+//        }
 
-        if ( ! $this->upload->do_upload('foto')) //se o upload foi processado
-        {
-            set_mensagem_sessao($this->upload->display_errors());
-            $this->index();
-        }
-        else
-        {
-            $data = array('upload_data' => $this->upload->data());
-        }
+        $this->obj_Empresa_Model->foto = $caminhoFoto = $configUpload['upload_path']; //Caminho da foto
 
-        $razaosocial = $this->input->post('razaosocial');
-        $cnpj = ($this->input->post('cnpj'));
-        $cep = $this->input->post('cep');
-        $site = $this->input->post('site');
-        $telefone = $this->input->post('telefone');
-        $endereco = $this->input->post('endereco');
-        $cidade = $this->input->post('cidade');
-        $estado = $this->input->post('estado');
-        $datacadastro = $this->input->post('datacadastro');
-        $situacao = $this->input->post('situacao');
-        $caminhoFoto = $configUpload['upload_path'];
-        $usuariologado = $this->session->userdata('usuario_id');
-
-        if($situacao == "ativo"){
-            $situacao = 1;
-        }elseif ($situacao == "inativo"){
-            $situacao = 0;
-        }
-
-        $dadosEmpresa = array(
-            'razaosocial' => $razaosocial,
-            'cnpj' => $cnpj,
-            'cep' => $cep,
-            'site' => $site,
-            'telefone' => $telefone,
-            'endereco' => $endereco,
-            'cidade' => $cidade,
-            'estado' => $estado,
-            'datacadastro' => $datacadastro,
-            'situacao' => $situacao,
-            'foto' => $caminhoFoto,
-            'usuario' => $usuariologado
-        );
-
-        $cadastrado = $this->obj_Empresa_Model->CadastrarEmpresa($dadosEmpresa);
-
+        $this->input->post();
         if ($this->form_validation->run() == FALSE)
         {
-            $this->load->view('menu');
+            set_mensagem_sessao(validation_errors());
+            $this->novo();
         }
         else
         {
-            If($cadastrado){
-                redirect('Grade');
-            }else{
-                $this->load->view('Error_view');
+            $dados_form = $this->input->post();
+            $this->obj_Empresa_Model->preencher_do_post($dados_form);
+
+            if ($this->obj_Empresa_DAO->CadastrarEmpresa($this->obj_Empresa_Model)) {
+                set_mensagem_sessao("Cadastro realizado com sucesso!");
+                $this->novo();
+            } else {
+                set_mensagem_sessao("Não foi possível realizar seu cadastro, por favor tente novamente!");
+                $this->novo();
             }
         }
     }
 
     public function Consultar()
     {
-        $dados['empresas'] = $this->obj_Empresa_Model->listaEmpresas();
+        $dados['empresas'] = $this->obj_Empresa_DAO->listaEmpresas();
         $this->load->view('Empresa/ConsultaEmpresa_view', $dados);
     }
 
@@ -135,7 +132,7 @@ class Empresa extends CI_Controller
             'dado' => $dado
         );
         $this->load->model('Curso_model');
-        $dados['empresas'] = $this->obj_Empresa_Model->listaEmpresaFiltro($dadosFiltro);
+        $dados['empresas'] = $this->obj_Empresa_DAO->listaEmpresaFiltro($dadosFiltro);
 
         $this->load->view('Empresa/ConsultaEmpresaFiltro_view', $dados);
     }
@@ -143,7 +140,7 @@ class Empresa extends CI_Controller
 
     public function DeletarEmpresa($id)
     {
-        $deletado = $this->obj_Empresa_Model->DeletarEmpresa($id);
+        $deletado = $this->obj_Empresa_DAO->DeletarEmpresa($id);
         $dados = array(
             'id' => $id
         );
@@ -156,43 +153,26 @@ class Empresa extends CI_Controller
 
     public function AtualizarEmpresa(){
 
-        $empresaid = $this->input->post('empresaid');
-        $razaosocial = $this->input->post('razaosocial');
-        $cnpj = ($this->input->post('cnpj'));
-        $cep = $this->input->post('cep');
-        $site = $this->input->post('site');
-        $telefone = $this->input->post('telefone');
-        $endereco = $this->input->post('endereco');
-        $cidade = $this->input->post('cidade');
-        $estado = $this->input->post('estado');
-        $datacadastro = $this->input->post('datacadastro');
-        $situacao = $this->input->post('situacao');
-        //$caminhoFoto = "";
-        $usuariologado = $this->session->userdata('usuario_id');
+        if ($this->form_validation->run() == false) {
+            set_mensagem_sessao(validation_errors());
+            $this->AlterarCadastro();
+        } else {
+            $dados_form = $this->input->post();
+            $this->obj_Empresa_Model->preencher_do_post($dados_form);
+        }
 
-       $dadosEmpresa = array(
-            'empresaid' => $empresaid,
-            'razaosocial' => $razaosocial,
-            'cnpj' => $cnpj,
-            'cep' => $cep,
-            'site' => $site,
-            'telefone' => $telefone,
-            'endereco' => $endereco,
-            'cidade' => $cidade,
-            'estado' => $estado,
-            'datacadastro' => $datacadastro,
-            'situacao' => $situacao,
-            //'foto' => $caminhoFoto,
-        );
-
-        $atualizado = $this->Empresa_Model->AtualizarEmpresa($dadosEmpresa);
-        if($atualizado){
+        if ($this->obj_Empresa_DAO->AtualizarEmpresa($this->obj_participante_model)) {
+            set_mensagem_sessao("Atualização realizada com sucesso!");
+            $this->load->view('login');
+            $this->index();
+        } else {
+            set_mensagem_sessao("Não foi possível atualizar seu cadastro, por favor tente novamente!");
             $this->Alterar();
         }
     }
 
     public function consultaEmpresaWS() {
-        $dados['empresas'] = $this->obj_Empresa_Model->listaEmpresasArray();
+        $dados['empresas'] = $this->obj_Empresa_DAO->listaEmpresasArray();
         $json = json_encode($dados);
         $json = serialize($json); //Converte para objeto
         return $json;
