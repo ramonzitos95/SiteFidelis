@@ -16,7 +16,7 @@
         <?php if ($mensagem = get_mensagem_sessao()) { ?>
             <div class="row"><div class="alert alert-info" role="alert"><?= $mensagem ?></div></div>
         <?php } ?>
-        <h2 align="center" id="topo"><?php if(isset($tituloprincipal)) echo $tituloprincipal ?></h2>
+        <h2 align="center" id="topo"><?php if(isset($tituloprincipal)) echo $tituloprincipal; ?></h2>
         <div id="erros" style="display: none;" class="alert alert-danger">
 
         </div>
@@ -33,13 +33,12 @@
                 </div>
             </div>
             <input type="hidden" name="empresaid" id="empresaid" class="form-control"
-                   value="<?php (isset($obj_empresa_model))?$obj_empresa_model->empresaid:''; ?>" required>
-
+                   value="<?php if(isset($obj_empresa_model[0]["empresaid"])) echo $obj_empresa_model[0]["empresaid"]; ?>" required>
             <div class="row">
                 <div class="form-group col-md-5">
                     <label>Razão Social</label><br>
                     <input type="text" name="razaosocial" id="razaosocial" class="form-control"
-                           value="<?php (isset($obj_empresa_model))?$obj_empresa_model[0]->razaosocial:''; ?>" required>
+                           value="<?php if(isset($obj_empresa_model[0]["razaosocial"])) echo trim($obj_empresa_model[0]["razaosocial"]); ?>" required>
                 </div>
             </div>
 
@@ -47,12 +46,12 @@
                 <div class="form-group col-md-3">
                     <label>CNPJ</label><br>
                     <input type="text" name="cnpj" id="cnpj" class="form-control"
-                           value="<?php (isset($obj_empresa_model))?$obj_empresa_model->{'cnpj'}:''; ?>" required>
+                           value="<?php if(isset($obj_empresa_model[0]["cnpj"])) echo trim($obj_empresa_model[0]["cnpj"]); ?>" required>
                 </div>
                 <div class="form-group col-md-2">
                     <label>CEP</label><br>
                     <input type="text" name="cep" id="cep" class="form-control"
-                           value="<?php (isset($obj_empresa_model))?$obj_empresa_model[0]->cep:''; ?>"required>
+                           value="<?php if(isset($obj_empresa_model[0]["cep"])) echo trim($obj_empresa_model[0]["cep"]); ?>" required>
                 </div>
             </div>
 
@@ -60,12 +59,12 @@
                 <div class="form-group col-md-3">
                     <b><label>Site</label></b><br>
                     <input type="text" name="site" id="site" class="form-control"
-                           value="<?php (isset($obj_empresa_model))?$obj_empresa_model[0]->site:''; ?>">
+                           value="<?php if(isset($obj_empresa_model[0]["site"])) echo trim($obj_empresa_model[0]["site"]); ?>">
                 </div>
                 <div class="form-group col-md-2">
                     <b><label>Telefone</label></b><br>
                     <input type="text" name="telefone" id="telefone" class="form-control"
-                           value="<?php (isset($obj_empresa_model))?$obj_empresa_model[0]->telefone:''; ?>">
+                           value="<?php if(isset($obj_empresa_model[0]["telefone"])) echo trim($obj_empresa_model[0]["telefone"]); ?>">
                 </div>
             </div>
 
@@ -73,7 +72,7 @@
                 <div class="form-group col-md-5">
                     <b><label>Endereco</label></b><br>
                     <input type="text" name="endereco" id="endereco" class="form-control"
-                           value="<?php (isset($obj_empresa_model))?$obj_empresa_model[0]->endereco:''; ?>"required>
+                           value="<?php if(isset($obj_empresa_model[0]["endereco"])) echo trim($obj_empresa_model[0]["endereco"]); ?>" required>
                 </div>
             </div>
 
@@ -81,7 +80,7 @@
                 <div class="form-group col-md-3">
                     <b><label>cidade</label></b><br>
                     <input type="text" name="cidade" id="cidade" class="form-control"
-                           value="<?php (isset($obj_empresa_model))?$obj_empresa_model[0]->cidade:''; ?>"required>
+                           value="<?php if(isset($obj_empresa_model[0]["cidade"])) echo trim($obj_empresa_model[0]["cidade"]); ?>" required>
                 </div>
                 <div class="form-group col-md-2">
                     <?php
@@ -114,7 +113,9 @@
                         'Sergipe' => 'Sergipe',
                         'Tocantins' => 'Tocantins'
                     );
-                    echo form_dropdown('estado', $optionEstados, 'Santa Catarina',(isset($obj_empresa_model))? $obj_empresa_model[0]->estado:'Selecione', 'class="form-control"');
+                    $estado = "";
+                    if(isset($obj_empresa_model[0]["estado"])) $estado = trim($obj_empresa_model[0]["estado"]);
+                    echo form_dropdown('estado', $optionEstados, 'Santa Catarina', $estado, 'class="form-control"');
                     ?>
                 </div>
             </div>
@@ -128,7 +129,7 @@
             </div>
 
             <div class="col-md-12">
-                <input type="submit" value="Cadastrar" class="btn btn-default">
+                <input type="submit" value="<?php echo $tituloBotao ?>" class="btn btn-default">
             </div>
         </form>
     </div>

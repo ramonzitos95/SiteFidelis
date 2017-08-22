@@ -18,12 +18,15 @@ class Empresa_DAO extends CI_Model
         return false;
     }
 
-    public function AtualizarEmpresa(Empresa_Model $obj_Empresa_Model)
+    public function AtualizarEmpresa(Empresa_Model $objEmpresaModel)
     {
-        //Inserindo dados do participante no banco de dados
-        $this->db->where('empresaid', $obj_Empresa_Model->id_participante);
+        //Atualizando dados do participante no banco de dados
+        unset($objEmpresaModel->usuario);
+        unset($objEmpresaModel->senha);
 
-        if($this->db->update($this->table, $obj_Empresa_Model))
+        $this->db->where('empresaid', $objEmpresaModel->empresaid);
+
+        if($this->db->update($this->table, $objEmpresaModel))
         {
             return true;
         }
@@ -34,17 +37,11 @@ class Empresa_DAO extends CI_Model
         }
     }
 
-    public function buscaEmpresa(Empresa_Model $obj_Empresa_Model)
+    public function buscaEmpresa($empresaid)
     {
-        $obj_Empresa_Model->empresaid = $this->session->userdata('empresa_id');
-        $sql = "SELECT * FROM empresa WHERE empresaid = '{$obj_Empresa_Model->empresaid}'";
-        echo $sql;
-        $resultado = $this->db->query($sql)->row();
-        if ($resultado){
-            return $resultado;
-        } else {
-            echo $this->db->last_query();
-        }
+        $this->db->where('empresaid', $empresaid);
+        $query = $this->db->get('empresa');
+        return $query->result_array();
     }
 
     public function listaEmpresas()

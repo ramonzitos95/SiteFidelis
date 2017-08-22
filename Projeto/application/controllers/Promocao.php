@@ -1,7 +1,7 @@
 <?php
 //defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Empresa extends CI_Controller
+class Promocao extends CI_Controller
 {
 
     public function __construct()
@@ -14,19 +14,32 @@ class Empresa extends CI_Controller
 
         $this->load->model(array('Promocao_Model'));
         $this->obj_PromocaoModel = new Promocao_Model();
+
+        $this->load->model(array('Promocao_DAO'));
+        $this->obj_PromocaoDAO = new Promocao_DAO();
+
+        $this->load->model(array('Empresa_Promocao'));
+        $this->obj_Empresa_Promocao = new Empresa_Promocao();
     }
 
-    public function index()
+    public function index(){
+        $this->novo();
+    }
+
+    public function novo()
     {
         $dados['title'] = 'Cadastro de Promoção';
         $dados['email'] =  $this->session->userdata('usuario');
         $dados['empresa'] =  $this->session->userdata('empresa_nome');
         $dados['site'] =  $this->session->userdata('site');
+        $dados['empresaid'] = $this->session->userdata('empresa_id');
+        $dados['action'] =  'Promocao/cadastrarPromocao';
+        $dados['titulobotao'] =  'Cadastrar';
         $this->load->view('Promocao/CadastroPromocao_View', $dados);
     }
 
-    public function Cadastrar(){
-        $dados['title'] = 'Cadastro de Promoção';
+    public function Alterar(){
+        $dados['title'] = 'Alteração de Promoção';
         $dados['email'] =  $this->session->userdata('usuario');
         $dados['empresa'] =  $this->session->userdata('empresa_nome');
         $dados['site'] =  $this->session->userdata('site');
@@ -41,6 +54,11 @@ class Empresa extends CI_Controller
 
     public function cadastrarPromocao()
     {
+        $this->load->library('form_validation');
+        //Validando o nome
+        $this->form_validation->set_rules('descricaopromocao', 'Descrição da Promoção', 'required|min_length[10]|max_length[100]|trim', array('required' => 'Você deve preencher a %s.'));
+        $this->form_validation->set_rules('produto', 'Produto', 'required|min_length[10]|max_length[500]|trim', array('required' => 'Você deve preencher o %s.'));
+
         // definimos um nome aleatório para o diretório
         // definimos o path onde o arquivo será gravado
         $foto = $_FILES['foto'];
@@ -59,67 +77,47 @@ class Empresa extends CI_Controller
         // passamos as configurações para a library upload
         $this->load->library('upload');
         $this->upload->initialize($configUpload);
+        $this->upload->do_upload('foto');
+        $this->upload->data();
 
-        if ( ! $this->upload->do_upload('foto')) //se o upload foi processado
-        {
-            set_mensagem_sessao($this->upload->display_errors());
-            $this->index();
-            //$error = array('error' => $this->upload->display_errors());
-            //print_r($error);
-        }
-        else
-        {
-            $data = array('upload_data' => $this->upload->data());
-        }
+//        if ( ! $this->upload->do_upload('foto')) //se o upload foi processado
+//        {
+//            set_mensagem_sessao($this->upload->display_errors());
+//            $this->index();
+//            //$error = array('error' => $this->upload->display_errors());
+//            //print_r($error);
+//        }
+//        else
+//        {
+//            $data = array('upload_data' => $this->upload->data());
+//        }
+//
+        $this->obj_PromocaoModel->foto = $caminhoFoto = $configUpload['upload_path']; //Caminho da foto
 
-        $razaosocial = $this->input->post('razaosocial');
-        $cnpj = ($this->input->post('cnpj'));
-        $cep = $this->input->post('cep');
-        $site = $this->input->post('site');
-        $telefone = $this->input->post('telefone');
-        $endereco = $this->input->post('endereco');
-        $cidade = $this->input->post('cidade');
-        $estado = $this->input->post('estado');
-        $datacadastro = $this->input->post('datacadastro');
-        $situacao = $this->input->post('situacao');
-        $caminhoFoto = $configUpload['upload_path'];
-        $usuariologado = $this->session->userdata('usuario_id');
-        //echo $caminhoFoto;
-
-        if($situacao == "ativo"){
-            $situacao = 1;
-        }elseif ($situacao == "inativo"){
-            $situacao = 0;
-        }
-
-        $dadosCurso = array(
-            //'empresaid' => $empresaid,
-            'razaosocial' => $razaosocial,
-            'cnpj' => $cnpj,
-            'cep' => $cep,
-            'site' => $site,
-            'telefone' => $telefone,
-            'endereco' => $endereco,
-            'cidade' => $cidade,
-            'estado' => $estado,
-            'datacadastro' => $datacadastro,
-            'situacao' => $situacao,
-            'foto' => $caminhoFoto,
-            'usuario' => $usuariologado
-        );
-
-        $cadastrado = $this->obj_PromocaoModel->CadastrarEmpresa($dadosCurso);
-
+        $this->input->post();
         if ($this->form_validation->run() == FALSE)
         {
-            $this->load->view('menu');
+            set_mensagem_sessao(validation_errors());
+            $this->novo();
         }
         else
         {
-            If($cadastrado){
-                redirect('Grade');
-            }else{
-                $this->load->view('Error_view');
+            $dados_form = $this->input->post();
+            $this->obj_PromocaoModel->preencher_do_post($dados_form);
+
+            //Associando dados da promoção, para criar a relação entre tabela de empresa e promoção
+            $this->obj_Empresa_Promocao->promocaoid = $this->input->post('promocaoid');
+            $this->obj_Empresa_Promocao->descricaopromocao = $this->obj_PromocaoModel->descricaopromocao;
+            $this->obj_Empresa_Promocao->razaosocial = $this->session->userdata('empresa_nome');
+            $this->obj_Empresa_Promocao->empresaid = $this->obj_PromocaoModel->empresa;
+
+            if ($this->obj_PromocaoDAO->CadastrarPromocao($this->obj_PromocaoModel)) {
+                $this->obj_PromocaoDAO->CadastrarEmpresaNaPromocao($this->obj_Empresa_Promocao);
+                set_mensagem_sessao("Cadastro realizado com sucesso!");
+                $this->novo();
+            } else {
+                set_mensagem_sessao("Não foi possível realizar seu cadastro, por favor tente novamente!");
+                $this->novo();
             }
         }
     }

@@ -1,19 +1,17 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: Ramon
+ * Date: 22/08/2017
+ * Time: 01:06
+ */
 
-defined('BASEPATH') OR exit('No direct script access allowed');
-
-class Promocao_Model extends CI_Model
+class Empresa_Promocao extends CI_Model
 {
-
     public $promocaoid;
+    public $empresaid;
+    public $razaosocial;
     public $descricaopromocao;
-    public $datavalidade;
-    public $situacao;
-    public $empresa;
-    public $produto;
-    public $valorproduto;
-    public $foto;
-
 
     public function __construct() {
         parent::__construct();
@@ -28,16 +26,16 @@ class Promocao_Model extends CI_Model
     }
 
     public function preencher_array_do_banco($array) {
-        $lista_promocoes = array();
+        $lista_empresas_promocoes = array();
         foreach ($array as $item) {
-            $obj_Promocao_Model = new Promocao_Model();
-            foreach (get_object_vars($obj_Promocao_Model) as $key => $value) {
+            $obj_Empresa_Promocao_Model = new Promocao_Model();
+            foreach (get_object_vars($obj_Empresa_Promocao_Model) as $key => $value) {
                 if (isset($item->$key))
-                    $obj_Promocao_Model->$key = $item->$key;
+                    $obj_Empresa_Promocao_Model->$key = $item->$key;
             }
-            array_push($lista_promocoes, $obj_Promocao_Model);
+            array_push($lista_empresas_promocoes, $obj_Empresa_Promocao_Model);
         }
-        return $lista_promocoes;
+        return $lista_empresas_promocoes;
     }
 
     public function preencher_do_banco($dados) {
@@ -49,4 +47,5 @@ class Promocao_Model extends CI_Model
                 $this->$key = $dados->$key;
         }
     }
+
 }

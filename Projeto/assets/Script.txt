@@ -48,7 +48,8 @@ CREATE TABLE empresa_cliente
 
 CREATE TABLE empresa_promocao
 (
-	empresaid integer PRIMARY KEY,
+    sequencial serial PRIMARY KEY,
+	empresaid integer,
 	promocaoid integer,
 	razaosocial char(100),
 	descricaopromocao char(100)

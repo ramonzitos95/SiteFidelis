@@ -24,10 +24,11 @@ class Empresa extends CI_Controller
         $this->load->library('session');
         $dados['title'] = 'Menu';
         $dados['email'] =  $this->session->userdata('usuario');
-        $dados['empresa'] =  $this->session->userdata('empresa_nome');
+        $dados['empresa_nome'] =  $this->session->userdata('empresa_nome');
         $dados['site'] =  $this->session->userdata('site');
         $dados['action'] = 'Empresa/CadastrarEmpresa';
         $dados['tituloprincipal'] = 'Cadastro de Empresa';
+        $dados['tituloBotao'] = 'Cadastrar';
         $this->load->view('Empresa/CadastroEmpresa_view', $dados);
     }
 
@@ -37,14 +38,13 @@ class Empresa extends CI_Controller
         $dados['email'] =  $this->session->userdata('usuario');
         $dados['empresa'] =  $this->session->userdata('empresa_nome');
         $dados['site'] =  $this->session->userdata('site');
-        $dadosEmpresa = $this->obj_Empresa_DAO->buscaEmpresa($this->obj_Empresa_Model);
-        $objetoEmpresa = $this->obj_Empresa_Model->preencher_do_banco($dadosEmpresa);
-        var_dump($objetoEmpresa);
-        $dados['obj_empresa_model'] = $objetoEmpresa;
+        $empresaid = $this->session->userdata('empresa_id');
+        $dadosEmpresa = $this->obj_Empresa_DAO->buscaEmpresa($empresaid);
+        $dados['obj_empresa_model'] = $dadosEmpresa;
         $dados['title'] = "Alterar Participante";
         $dados['action'] = 'Empresa/AtualizarEmpresa';
         $dados['tituloprincipal'] = 'Atualizaçao da Empresa';
-
+        $dados['tituloBotao'] = 'Atualizar';
         $this->load->view('Empresa/CadastroEmpresa_view', $dados);
     }
 
@@ -93,6 +93,7 @@ class Empresa extends CI_Controller
 //            $data = array('upload_data' => $this->upload->data());
 //        }
 
+        $this->obj_Empresa_Model->situacao = 1;
         $this->obj_Empresa_Model->foto = $caminhoFoto = $configUpload['upload_path']; //Caminho da foto
 
         $this->input->post();
@@ -153,18 +154,34 @@ class Empresa extends CI_Controller
 
     public function AtualizarEmpresa(){
 
+        $this->load->library('form_validation');
+        //Validando o nome
+        $this->form_validation->set_rules('razaosocial', 'Razão social', 'required|min_length[10]|max_length[100]|trim', array('required' => 'Você deve preencher a %s.'));
+        //Validando o CNPJ
+        $this->form_validation->set_rules('cnpj', 'CNPJ', 'required|max_length[20]|trim');
+        //Validando o CEP
+        $this->form_validation->set_rules('ds_cep', 'CEP', 'trim|max_length[10]');
+        //Validando o Logradouro
+        $this->form_validation->set_rules('endereco', 'Endereço', 'trim');
+        //Validando a cidade
+        $this->form_validation->set_rules('cidade', 'Cidade', 'trim');
+        //Validando o estado
+        $this->form_validation->set_rules('estado', 'Estado', 'trim');
+
         if ($this->form_validation->run() == false) {
             set_mensagem_sessao(validation_errors());
-            $this->AlterarCadastro();
+            $this->Alterar();
         } else {
             $dados_form = $this->input->post();
             $this->obj_Empresa_Model->preencher_do_post($dados_form);
         }
 
-        if ($this->obj_Empresa_DAO->AtualizarEmpresa($this->obj_participante_model)) {
+        $this->obj_Empresa_Model->empresaid = $this->input->post("empresaid");
+
+        if ($this->obj_Empresa_DAO->AtualizarEmpresa($this->obj_Empresa_Model)) {
             set_mensagem_sessao("Atualização realizada com sucesso!");
-            $this->load->view('login');
-            $this->index();
+            $this->Alterar();
+
         } else {
             set_mensagem_sessao("Não foi possível atualizar seu cadastro, por favor tente novamente!");
             $this->Alterar();

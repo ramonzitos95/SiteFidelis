@@ -86,8 +86,7 @@ class Login extends CI_Controller
                     'empresa_nome' => $retorno[0]->razaosocial,
                     'site' => $retorno[0]->site
                 );
-                array_push($_SESSION, $user_dados);
-                echo  $_SESSION["empresa_id"];
+                //array_push($_SESSION, $user_dados);
 
                 $retornoEmpresa = $this->obj_Empresa_DAO->listaEmpresa($user_dados['empresa_id']);
                 $this->obj_Empresa_Model->preencher_do_banco($retornoEmpresa);

@@ -33,9 +33,7 @@
                         <li><a href="sobre.php">Sobre</a></li>
                         <?php if(isset($email) and $email != null){ ?>
                             <li><a href="#">Usuário: <?php echo $email; ?></a></li>
-                        <?php }
-                            echo $this->session->userdata('usuario_id');
-                        ?>
+                        <?php } ?>
 
                         <?php if(isset($empresa_nome) and $empresa_nome != null){ ?>
                           <li><a href="<?php echo $site ?>" target="_blank">Empresa: <?php echo 

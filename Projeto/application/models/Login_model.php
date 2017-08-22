@@ -17,8 +17,6 @@ class Login_model extends CI_Model
     {
         //Chamada o próprio construtor
         parent::__construct();
-        $this->load->model('Turma_model');
-        $this->obj_log = new LogArquivo();
     }
 
     //Validando o login do aluno

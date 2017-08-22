@@ -11,7 +11,7 @@
             };
         };
     </script>
-    <div class="container-fluid" >
+<div class="container-fluid" >
     <div class="row-fluid">
         <?php if ($mensagem = get_mensagem_sessao()) { ?>
             <div class="row"><div class="alert alert-info" role="alert"><?= $mensagem ?></div></div>
@@ -21,46 +21,55 @@
 
         </div>
 
-        <form action="<?php echo base_url('Promocao/CadastrarPromocao'); ?>" id="form" method="post" enctype="multipart/form-data">
-            <div class="form-group col-md-3">
-                <b><label>Foto da Promoção</label></b><br>
-                Selecione uma imagem: <input type="file" id="uploadImage" name="foto"  onchange="PreviewImage();"/><br /><br />
-            </div>
-            <div class="form-group col-md-2">
-                <img id="uploadPreview" style="width: 100px; height: 75px; border-style: solid; border-width: 1px;" />
-            </div>
-             <div class="form-group col-md-8">
-                <label>Descrição</label><br>
-                <input type="text" name="cnpj" id="cnpj" class="form-control" required>
-            </div>
-            <div class="form-group col-md-4"></div>
-            <div class="form-group col-md-4">
-                <label>Data da Validade</label><br>
-                <input type="data" name="datavalidade" id="razaosocial" class="form-control" required>
-            </div>
-            <div class="form-group col-md-4">
-                <label>Situação</label><br>
-                <input type="text" name="cep" id="cep" class="form-control" required>
-            </div>
-             <div class="form-group col-md-4">
-                <label>Situação</label> <br>
-                <label>Ativo</label>
-                <input type="radio" name="situacao" class="radio-inline" value="1">
-                <label>Inativo</label>
-                <input type="radio" name="situacao" class="radio-inline" value="0">
-            </div>        
-
-            <div class="form-group col-md-4">
-                <b><label>Produto</label></b><br>
-                <input type="text" name="produto" id="cidade" class="form-control" required>
-            </div>
-            <div class="form-group col-md-4">
-                <b><label>Valor</label></b><br>
-                <input type="text" name="valorproduto" id="estado" class="form-control" required>
+        <form action="<?php if(isset($action)) echo base_url($action) ?>"  id="form" method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="form-group col-md-3">
+                    <b><label>Foto da Promoção</label></b><br>
+                    Selecione uma imagem: <input type="file" id="uploadImage" name="foto"  onchange="PreviewImage();"/><br /><br />
+                </div>
+                <div class="form-group col-md-2">
+                    <img id="uploadPreview" style="width: 100px; height: 75px; border-style: solid; border-width: 1px;" />
+                </div>
             </div>
 
-            <div class="col-md-12">
-                <input type="submit" value="Cadastrar" class="btn btn-default">
+            <div class="row">
+                <input type="hidden" name="empresa" id="empresa" class="form-control"
+                       value="<?php if(isset($empresaid)) echo $empresaid; ?>" required>
+
+                <div class="form-group col-md-5">
+                    <label>Descrição</label><br>
+                    <input type="text" name="descricaopromocao" id="descricaopromocao" class="form-control" required>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-md-3">
+                    <label>Data da Validade</label><br>
+                    <input type="data" name="datavalidade" id="datavalidade" class="form-control" required>
+                </div>
+
+                <div class="form-group col-md-2">
+                    <label>Situação</label> <br>
+                    <label>Ativo</label>
+                    <input type="radio" name="situacao" class="radio-inline" value="1">
+                    <label>Inativo</label>
+                    <input type="radio" name="situacao" class="radio-inline" value="0">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-md-3">
+                    <b><label>Produto</label></b><br>
+                    <input type="text" name="produto" id="produto" class="form-control" required>
+                </div>
+                <div class="form-group col-md-2">
+                    <b><label>Valor</label></b><br>
+                    <input type="number" name="valorproduto" id="valorproduto" class="form-control" required>
+                </div>
+            </div>
+
+            <div class="col-md-1 col-md-offset-2">
+                <input type="submit" value="<?php echo $titulobotao ?>" class="btn btn-default">
             </div>
         </form>
     </div>
