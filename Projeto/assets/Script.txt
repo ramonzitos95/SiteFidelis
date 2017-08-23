@@ -11,8 +11,9 @@ CREATE TABLE empresa
 	estado char(25),
 	situacao smallint,
 	foto character varying(100),
+	arquivo char(50);
 	datacadastro date,
-	usuario char(100),
+	usuario char,
 	senha text
 );
 
@@ -26,7 +27,8 @@ CREATE TABLE promocoes
 	empresa integer default 0,
 	produto varchar(500),
 	valorproduto numeric,
-	foto character varying(100)
+	foto character varying(100),
+	arquivo char(50);
 );
 
 CREATE TABLE cliente

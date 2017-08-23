@@ -48,11 +48,26 @@ class Empresa extends CI_Controller
         $this->load->view('Empresa/CadastroEmpresa_view', $dados);
     }
 
+     public function Alterar2($id)
+    {
+        $this->load->library('session');
+        $dados['email'] =  $this->session->userdata('usuario');
+        $dados['empresa'] =  $this->session->userdata('empresa_nome');
+        $dados['site'] =  $this->session->userdata('site');
+        $dadosEmpresa = $this->obj_Empresa_DAO->buscaEmpresa($id);
+        $dados['obj_empresa_model'] = $dadosEmpresa;
+        $dados['title'] = "Alterar Participante";
+        $dados['action'] = 'Empresa/AtualizarEmpresa';
+        $dados['tituloprincipal'] = 'Atualizaçao da Empresa';
+        $dados['tituloBotao'] = 'Atualizar';
+        $this->load->view('Empresa/CadastroEmpresa_view', $dados);
+    }
+
     public function cadastrarEmpresa()
     {
         $this->load->library('form_validation');
         //Validando o nome
-        $this->form_validation->set_rules('razaosocial', 'Razão social', 'required|min_length[10]|max_length[100]|trim', array('required' => 'Você deve preencher a %s.'));
+        $this->form_validation->set_rules('razaosocial', 'Razão social', 'required|trim', array('required' => 'Você deve preencher a %s.'));
         //Validando o CNPJ
         $this->form_validation->set_rules('cnpj', 'CPF', 'required|max_length[20]|trim|is_unique[empresa.cnpj]');
         //Validando o CEP
@@ -67,7 +82,7 @@ class Empresa extends CI_Controller
         // definimos o path onde o arquivo será gravado
         $foto = $_FILES['foto'];
         $path = "./assets/img/empresa";
-        $nomeFoto = "minhaimagem.jpg";
+        $nomeFoto = $this->input->post("razaosocial");
         if(!file_exists($path))
             mkdir($path, 0755);
 
@@ -82,7 +97,8 @@ class Empresa extends CI_Controller
         $this->load->library('upload');
         $this->upload->initialize($configUpload);
         $this->upload->do_upload('foto');
-        $this->upload->data();
+        $data = $this->upload->data();
+        $nomearquivo = $data["file_name"];
 //        if ( ! $this->upload->do_upload('foto')) //se o upload foi processado
 //        {
 //            set_mensagem_sessao($this->upload->display_errors());
@@ -94,7 +110,8 @@ class Empresa extends CI_Controller
 //        }
 
         $this->obj_Empresa_Model->situacao = 1;
-        $this->obj_Empresa_Model->foto = $caminhoFoto = $configUpload['upload_path']; //Caminho da foto
+        $this->obj_Empresa_Model->foto = $configUpload['upload_path'];
+        $this->obj_Empresa_Model->arquivo = $nomearquivo;  
 
         $this->input->post();
         if ($this->form_validation->run() == FALSE)
@@ -107,10 +124,13 @@ class Empresa extends CI_Controller
             $dados_form = $this->input->post();
             $this->obj_Empresa_Model->preencher_do_post($dados_form);
 
-            if ($this->obj_Empresa_DAO->CadastrarEmpresa($this->obj_Empresa_Model)) {
+            if ($this->obj_Empresa_DAO->CadastrarEmpresa($this->obj_Empresa_Model))
+            {
                 set_mensagem_sessao("Cadastro realizado com sucesso!");
                 $this->novo();
-            } else {
+            } 
+            else 
+            {
                 set_mensagem_sessao("Não foi possível realizar seu cadastro, por favor tente novamente!");
                 $this->novo();
             }
@@ -156,7 +176,7 @@ class Empresa extends CI_Controller
 
         $this->load->library('form_validation');
         //Validando o nome
-        $this->form_validation->set_rules('razaosocial', 'Razão social', 'required|min_length[10]|max_length[100]|trim', array('required' => 'Você deve preencher a %s.'));
+        $this->form_validation->set_rules('razaosocial', 'Razão social', 'required|trim', array('required' => 'Você deve preencher a %s.'));
         //Validando o CNPJ
         $this->form_validation->set_rules('cnpj', 'CNPJ', 'required|max_length[20]|trim');
         //Validando o CEP
@@ -191,8 +211,8 @@ class Empresa extends CI_Controller
     public function consultaEmpresaWS() {
         $dados['empresas'] = $this->obj_Empresa_DAO->listaEmpresasArray();
         $json = json_encode($dados);
-        $json = serialize($json); //Converte para objeto
-        return $json;
+        //$json = serialize($json); //Converte para objeto
+        echo $json;
     }
 
 }

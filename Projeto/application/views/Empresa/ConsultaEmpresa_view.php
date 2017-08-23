@@ -32,8 +32,7 @@ $this->load->view('login/menu_view');
                         <th colspan="1">Telefone</th>
                         <th colspan="1">Cidade</th>
                         <th colspan="1">Estado</th>
-                        <th colspan="1"></th>
-                        <th colspan="1"></th>
+                        <th colspan="2">Logo</th>
                     </tr>
                     </thead>
                     <tbody id="conteudo">
@@ -45,8 +44,21 @@ $this->load->view('login/menu_view');
                             <td colspan="1"><?php echo $empresa->telefone; ?></td>
                             <td colspan="1"><?php echo $empresa->cidade; ?></td>
                             <td colspan="1"><?php echo $empresa->estado; ?></td>
+                            <td colspan="2">
+                                <?php 
+                                    $caminho_completo = trim($empresa->foto);
+                                    $arquivo = trim($empresa->arquivo);
+                                    str_replace("", ".", $caminho_completo);
+
+                                    $caminho_ext = base_url($caminho_completo . '/' . $arquivo);
+
+                                    if (!empty($caminho_ext) && $arquivo != ""){
+                                        echo '<img src='.$caminho_ext.' width="150" height="75" />'; 
+                                    }
+                                ?>
+                            </td>
                             <td colspan="1">
-                                <a href="<?php echo base_url('Empresa/Alteracao/' . $empresa->empresaid); ?>"
+                                <a href="<?php echo base_url('Empresa/Alterar2/' . $empresa->empresaid); ?>"
                                    class="btn btn-large btn-primary">Editar Empresa</a>
                             </td>
                             <td colspan="1">

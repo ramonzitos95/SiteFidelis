@@ -19,6 +19,7 @@ class Empresa_Model extends CI_Model
     public $datacadastro;
     public $usuario;
     public $senha;
+    public $arquivo;
     
     public function __construct() {
         parent::__construct();

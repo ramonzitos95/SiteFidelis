@@ -21,6 +21,11 @@
 
         </div>
 
+        <?php 
+            foreach ($obj_promocao_model as $p) { 
+            $caminhoimagem = base_url($p->foto . '/' . $p->arquivo);    
+        ?>
+
         <form action="<?php if(isset($action)) echo base_url($action) ?>"  id="form" method="post" enctype="multipart/form-data">
             <div class="row">
                 <div class="form-group col-md-3">
@@ -28,7 +33,7 @@
                     Selecione uma imagem: <input type="file" id="uploadImage" name="foto"  onchange="PreviewImage();"/><br /><br />
                 </div>
                 <div class="form-group col-md-2">
-                    <img id="uploadPreview" style="width: 100px; height: 75px; border-style: solid; border-width: 1px;" />
+                    <img id="uploadPreview" style="width: 100px; height: 75px; border-style: solid; border-width: 1px;" src="<?php echo $caminhoimagem; ?>"/>
                 </div>
             </div>
 
@@ -38,14 +43,14 @@
 
                 <div class="form-group col-md-5">
                     <label>Descrição</label><br>
-                    <input type="text" name="descricaopromocao" id="descricaopromocao" class="form-control" required>
+                    <input type="text" name="descricaopromocao" id="descricaopromocao" class="form-control" value="<?php if (isset($p->descricaopromocao)) echo $p->descricaopromocao; ?>" required>
                 </div>
             </div>
 
             <div class="row">
                 <div class="form-group col-md-3">
                     <label>Data da Validade</label><br>
-                    <input type="data" name="datavalidade" id="datavalidade" class="form-control" required>
+                    <input type="data" name="datavalidade" id="datavalidade" class="form-control" value="<?php if (isset($p->datavalidade)) echo $p->datavalidade; ?>" required>
                 </div>
 
                 <div class="form-group col-md-2">
@@ -60,11 +65,12 @@
             <div class="row">
                 <div class="form-group col-md-3">
                     <b><label>Produto</label></b><br>
-                    <input type="text" name="produto" id="produto" class="form-control" required>
+                    <input type="text" name="produto" id="produto" class="form-control" 
+                     value="<?php if (isset($p->produto)) echo $p->produto; ?>" required>
                 </div>
                 <div class="form-group col-md-2">
                     <b><label>Valor</label></b><br>
-                    <input type="number" name="valorproduto" id="valorproduto" class="form-control" required>
+                    <input type="number" name="valorproduto" id="valorproduto" class="form-control" value="<?php if (isset($p->valorproduto)) echo $p->valorproduto; ?>" required>
                 </div>
             </div>
 
@@ -73,6 +79,7 @@
             </div>
         </form>
 
+        <?php } ?>
     </div>
 </div>
 <?php $this->load->view('uteis/rodape'); ?>

@@ -18,23 +18,22 @@ class Promocao_DAO extends CI_Model
     public function CadastrarPromocao(Promocao_Model $obj_Promocao_Model)//Função para cadastrar Pessoa
     {
         unset($obj_Promocao_Model->promocaoid);
-        if ($this->db->insert("promocoes", $obj_Promocao_Model)){
-            return true;
-        }
-        echo $this->db->last_query();
-        return false;
+        return $this->db->insert("promocoes", $obj_Promocao_Model);
     }
 
     public function CadastrarEmpresaNaPromocao(Empresa_Promocao $obj_Empresa_Promocao)//Função para cadastrar Pessoa
     {
         if ($this->db->insert("empresa_promocao", $obj_Empresa_Promocao)){
-            return true;
+            return $this->db->insert("empresa_promocao", $obj_Empresa_Promocao);
         }
         return false;
     }
 
     public function listaPromocoes()
     {
+        $empresaid = $this->session->userdata("empresa_id");
+        $this->db->where('situacao', 1); //Pomoções ativas
+        $this->db->where('empresa', $empresaid); //Promoções da empresa logada
         $this->db->order_by('promocaoid', 'asc');
         $query = $this->db->get('promocoes');
         return $query->result();
@@ -80,7 +79,7 @@ class Promocao_DAO extends CI_Model
         If ($id != null)
         {
             $this->db->delete('promocoes', array('promocaoid' => $id));
-            return $id;
+            return true;
         }
         Return False;
 

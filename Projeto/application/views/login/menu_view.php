@@ -27,7 +27,7 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true">Promoções <span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li><a href="<?php echo base_url('Promocao')?>">Cadastrar</a></li>
-                                <li><a href="<?php echo base_url('Promocao/Consultar')?>">Consultar</a></li>
+                                <li><a href="<?php echo base_url('Promocao/ConsultarPromocao')?>">Consultar</a></li>
                             </ul>
                         </li>
                         <li><a href="sobre.php">Sobre</a></li>

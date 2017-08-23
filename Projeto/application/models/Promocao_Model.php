@@ -13,6 +13,7 @@ class Promocao_Model extends CI_Model
     public $produto;
     public $valorproduto;
     public $foto;
+    public $arquivo;
 
 
     public function __construct() {
