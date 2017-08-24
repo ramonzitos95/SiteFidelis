@@ -48,12 +48,10 @@ $this->load->view('login/menu_view');
                                 <?php 
                                     $caminho_completo = trim($empresa->foto);
                                     $arquivo = trim($empresa->arquivo);
-                                    str_replace("", ".", $caminho_completo);
-
+                                    //echo $caminho_completo;
                                     $caminho_ext = base_url($caminho_completo . '/' . $arquivo);
-
                                     if (!empty($caminho_ext) && $arquivo != ""){
-                                        echo '<img src='.$caminho_ext.' width="150" height="75" />'; 
+                                        echo '<img src='.$caminho_ext.' width="300" height="75" />';
                                     }
                                 ?>
                             </td>

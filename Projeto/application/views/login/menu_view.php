@@ -30,7 +30,7 @@
                                 <li><a href="<?php echo base_url('Promocao/ConsultarPromocao')?>">Consultar</a></li>
                             </ul>
                         </li>
-                        <li><a href="sobre.php">Sobre</a></li>
+                        <li><a href="http://developer.ramonsilva.com.br/" target="_blank">Sobre</a></li>
                         <?php if(isset($email) and $email != null){ ?>
                             <li><a href="#">Usuário: <?php echo $email; ?></a></li>
                         <?php } ?>

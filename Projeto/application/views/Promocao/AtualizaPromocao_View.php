@@ -41,6 +41,9 @@
                 <input type="hidden" name="empresa" id="empresa" class="form-control"
                        value="<?php if(isset($empresaid)) echo $empresaid; ?>" required>
 
+                <input type="hidden" name="promocaoid" id="promocaoid" class="form-control"
+                       value="<?php if(isset($p->promocaoid)) echo $p->promocaoid; ?>" required>
+
                 <div class="form-group col-md-5">
                     <label>Descrição</label><br>
                     <input type="text" name="descricaopromocao" id="descricaopromocao" class="form-control" value="<?php if (isset($p->descricaopromocao)) echo $p->descricaopromocao; ?>" required>

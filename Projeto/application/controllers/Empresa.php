@@ -109,8 +109,9 @@ class Empresa extends CI_Controller
 //            $data = array('upload_data' => $this->upload->data());
 //        }
 
+        $caminho_inteiro = str_replace("./", "", base_url($configUpload['upload_path']));
         $this->obj_Empresa_Model->situacao = 1;
-        $this->obj_Empresa_Model->foto = $configUpload['upload_path'];
+        $this->obj_Empresa_Model->foto = $caminho_inteiro;
         $this->obj_Empresa_Model->arquivo = $nomearquivo;  
 
         $this->input->post();

@@ -91,14 +91,22 @@ class Promocao_DAO extends CI_Model
         return $this->db->get('promocoes')->result();
     }
 
-    public function AtualizarPromocao($dados)
+    public function AtualizarPromocao(Promocao_Model $obj_promocao_model)
     {
-        $this->db->where("promocaoid", $dados['promocaoid']);
-        $Atualizado = $this->db->update("promocoes", $dados);
+        $this->db->where("promocaoid", $obj_promocao_model->promocaoid);
+        $Atualizado = $this->db->update("promocoes", $obj_promocao_model);
         if ($Atualizado) {
             return true;
         }
         return false;
-
     }
+
+    public function BuscaUltimaPromocao()
+    {
+        $this->db->select_max('promocaoid');
+        $result = $this->db->get('promocoes');
+        return $result->promocaoid;
+    }
+
+
 }

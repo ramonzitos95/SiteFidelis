@@ -40,14 +40,13 @@ $this->load->view('login/menu_view');
                         <?php foreach ($promocoes as $promocao) { ?>
                         <tr>
                             <td colspan="2"><?php echo $promocao->descricaopromocao; ?></td>
-                            <td colspan="1"><?php echo $promocao->datavalidade; ?></td>
+                            <td colspan="1"><?php echo date_format(new DateTime($promocao->datavalidade) , 'd/m/Y'); ?></td>
                             <td colspan="1"><?php echo $promocao->situacao; ?></td>
                             <td colspan="1"><?php echo $promocao->produto; ?></td>
                             <td colspan="1"><?php echo $promocao->valorproduto; ?></td>
                             <td colspan="2"><?php 
                                 $caminho_completo = trim($promocao->foto);
                                 $arquivo = trim($promocao->arquivo);
-                                str_replace("", ".", $caminho_completo);
 
                                 $caminho_ext = base_url($caminho_completo . '/' . $arquivo);
 

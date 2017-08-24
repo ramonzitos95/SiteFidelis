@@ -91,18 +91,10 @@ class Promocao extends CI_Controller
         $nomearquivo = $data["file_name"]; //Nome do Arquivo   
 
 //        if ( ! $this->upload->do_upload('foto')) //se o upload foi processado
-//        {
 //            set_mensagem_sessao($this->upload->display_errors());
-//            $this->index();
-//            //$error = array('error' => $this->upload->display_errors());
-//            //print_r($error);
-//        }
-//        else
-//        {
-//            $data = array('upload_data' => $this->upload->data());
-//        }
-//
-        $this->obj_PromocaoModel->foto = $configUpload['upload_path']; //Caminho da foto
+
+        $caminho_inteiro = str_replace("./", "", base_url($configUpload['upload_path']));
+        $this->obj_PromocaoModel->foto = $caminho_inteiro; //Caminho da foto
         $this->obj_PromocaoModel->arquivo = $nomearquivo;  
 
         $this->input->post();
@@ -117,14 +109,13 @@ class Promocao extends CI_Controller
             $this->obj_PromocaoModel->preencher_do_post($dados_form);
 
             //Associando dados da promoção, para criar a relação entre tabela de empresa e promoção
-            $this->obj_Empresa_Promocao->promocaoid = $this->input->post('promocaoid');
             $this->obj_Empresa_Promocao->descricaopromocao = $this->obj_PromocaoModel->descricaopromocao;
             $this->obj_Empresa_Promocao->razaosocial = $this->session->userdata('empresa_nome');
             $this->obj_Empresa_Promocao->empresaid = $this->obj_PromocaoModel->empresa;
             $PromocaoCadastrada = $this->obj_PromocaoDAO->CadastrarPromocao($this->obj_PromocaoModel);
 
-            if ($PromocaoCadastrada) {     
-               
+            if ($PromocaoCadastrada) {
+                $this->obj_Empresa_Promocao->promocaoid = $this->obj_PromocaoDAO->BuscaUltimaPromocao();
                 $this->obj_PromocaoDAO->CadastrarEmpresaNaPromocao($this->obj_Empresa_Promocao);
                 set_mensagem_sessao("Cadastro realizado com sucesso!");
                 $this->novo();
@@ -167,28 +158,59 @@ class Promocao extends CI_Controller
     }
 
     public function AtualizarPromocao(){
+        $this->load->library('form_validation');
+        //Validando o nome
+        $this->form_validation->set_rules('descricaopromocao', 'Descrição da Promoção', 'required|trim', array('required' => 'Você deve preencher a %s.'));
+        $this->form_validation->set_rules('produto', 'Produto', 'required|trim', array('required' => 'Você deve preencher o %s.'));
 
-        $this->load->model('Curso_model');
+        // definimos um nome aleatório para o diretório
+        // definimos o path onde o arquivo será gravado
+        $foto = $_FILES['foto'];
+        $path = "./assets/img/promocao";
+        $nomeFoto = $this->input->post("descricaopromocao");
+        if(!file_exists($path))
+            mkdir($path, 0755);
 
-        $cursoid = $this->input->post('cursoid');
-        $cursonome = $this->input->post('cursonome');
-        $cargahoraria = ($this->input->post('cargahoraria'));
-        $ementa = $this->input->post('ementa');
-        $bibliografia = $this->input->post('bibliografia');
-        $modocurso = $this->input->post('modocurso');
-        $origem = $this->input->post('origem');
-        $situacao = $this->input->post('situacao');
-        if($situacao == "ativo"){
-            $situacao = true;
-        }elseif ($situacao == "inativo"){
-            $situacao = false;
+        $configUpload['upload_path']          = $path;
+        $configUpload['file_name']            = $nomeFoto;
+        $configUpload['allowed_types']        = 'gif|jpg|png';
+        $configUpload['max_size']             = 100;
+        $configUpload['max_width']            = 1024;
+        $configUpload['max_height']           = 768;
+
+        // passamos as configurações para a library upload
+        $this->load->library('upload');
+        $this->upload->initialize($configUpload);
+        $this->upload->do_upload('foto');
+        $data = $this->upload->data();
+        $nomearquivo = $data["file_name"]; //Nome do Arquivo
+
+//        if ( ! $this->upload->do_upload('foto')) //se o upload foi processado
+//            set_mensagem_sessao($this->upload->display_errors());
+
+        $caminho_inteiro = str_replace("./", "", base_url($configUpload['upload_path']));
+        $this->obj_PromocaoModel->foto = $caminho_inteiro; //Caminho da foto
+        $this->obj_PromocaoModel->arquivo = $nomearquivo;
+
+        $this->input->post();
+        if ($this->form_validation->run() == FALSE)
+        {
+            set_mensagem_sessao(validation_errors());
+            $this->novo();
         }
-
-
-        $atualizado = $this->Curso_model->atualizaCurso($dadosCurso);
-        if($atualizado){
-            echo '<script>alert("O curso foi atualizado com sucesso");</script>';
-            redirect('Menu');
+        else
+        {
+            $dados_form = $this->input->post();
+            $this->obj_PromocaoModel->preencher_do_post($dados_form);
+            //Associando dados da promoção, para criar a relação entre tabela de empresa e promoção
+            $PromocaoAtualizada = $this->obj_PromocaoDAO->AtualizarPromocao($this->obj_PromocaoModel);
+            if ($PromocaoAtualizada) {
+                set_mensagem_sessao("Promoção atualizada com sucesso!");
+                $this->Alterar($this->obj_PromocaoModel->promocaoid);
+            } else {
+                set_mensagem_sessao("Não foi possível realizar seu cadastro, por favor tente novamente!");
+                $this->Alterar($this->obj_PromocaoModel->promocaoid);
+            }
         }
     }
 
